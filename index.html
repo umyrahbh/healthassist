@@ -559,72 +559,21 @@
 
             servicesGrid.innerHTML = '<div class="loading">Loading services...</div>';
 
-            // For development/testing, use mock data if API is not available
-            const useMockData = true; // Change to false when API is ready
-
-            if (useMockData) {
-                // Mock data for services
-                const checkupTypes = [
-                    {
-                        checkup_id: 1,
-                        name: "General Health Checkup", 
-                        description: "Comprehensive health assessments to monitor your overall well-being and catch potential issues early.",
-                        price: 150.00,
-                        image_path: null,
-                        is_active: 1
-                    },
-                    {
-                        checkup_id: 2,
-                        name: "Dental Checkup", 
-                        description: "Regular dental examinations and cleaning services to maintain optimal oral health.",
-                        price: 120.00,
-                        image_path: null,
-                        is_active: 1
-                    },
-                    {
-                        checkup_id: 3,
-                        name: "Eye Checkup", 
-                        description: "Vision assessments and eye health screenings conducted by experienced ophthalmologists.",
-                        price: 100.00,
-                        image_path: null,
-                        is_active: 1
-                    },
-                    {
-                        checkup_id: 4,
-                        name: "Pregnancy Consultation", 
-                        description: "Specialized care and advice for expectant mothers throughout their pregnancy journey.",
-                        price: 180.00,
-                        image_path: null,
-                        is_active: 1
-                    },
-                    {
-                        checkup_id: 5,
-                        name: "Heart Health Assessment", 
-                        description: "Detailed cardiovascular evaluations to assess heart function and identify potential risks.",
-                        price: 200.00,
-                        image_path: null,
-                        is_active: 1
+            // Fetch checkup types from the database
+            fetch('/api/checkup-types')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load services');
                     }
-                ];
-
-                displayServices(checkupTypes);
-            } else {
-                // Real API call
-                fetch('/api/checkup-types')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to load services');
-                        }
-                        return response.json();
-                    })
-                    .then(checkupTypes => {
-                        displayServices(checkupTypes);
-                    })
-                    .catch(error => {
-                        console.error('Error loading services:', error);
-                        servicesGrid.innerHTML = '<p class="error-message">Failed to load services. Please try again later.</p>';
-                    });
-            }
+                    return response.json();
+                })
+                .then(checkupTypes => {
+                    displayServices(checkupTypes);
+                })
+                .catch(error => {
+                    console.error('Error loading services:', error);
+                    servicesGrid.innerHTML = '<p class="error-message">Failed to load services. Please try again later.</p>';
+                });
         }
 
         // Display services from data
@@ -680,72 +629,21 @@
             // Show loading indicator
             healthFactsGrid.innerHTML = '<div class="loading">Loading health facts...</div>';
 
-            // For development/testing, use mock data if API is not available
-            const useMockData = true; // Change to false when API is ready
-
-            if (useMockData) {
-                // Mock data for health facts
-                const healthFacts = [
-                    {
-                        fact_id: 1,
-                        title: "The Importance of Hydration",
-                        content: "Drinking adequate water daily is essential for optimal bodily functions. Aim for at least 8 glasses of water per day to maintain proper hydration.",
-                        category: "Nutrition",
-                        is_featured: 1,
-                        is_active: 1
-                    },
-                    {
-                        fact_id: 2,
-                        title: "Benefits of Regular Exercise",
-                        content: "Just 30 minutes of moderate physical activity daily can significantly reduce the risk of heart disease, improve mental health, and increase longevity.",
-                        category: "Fitness",
-                        is_featured: 1,
-                        is_active: 1
-                    },
-                    {
-                        fact_id: 3,
-                        title: "Sleep and Health",
-                        content: "Adults should aim for 7-9 hours of quality sleep per night. Consistent sleep patterns help regulate metabolism, improve cognitive function, and strengthen immune response.",
-                        category: "Wellness",
-                        is_featured: 0,
-                        is_active: 1
-                    },
-                    {
-                        fact_id: 4,
-                        title: "Dental Health Tips",
-                        content: "Brush teeth twice daily, floss regularly, and schedule dental checkups every six months to maintain optimal oral health and prevent cavities.",
-                        category: "Dental",
-                        is_featured: 0,
-                        is_active: 1
-                    },
-                    {
-                        fact_id: 5,
-                        title: "Eye Care Essentials",
-                        content: "Rest your eyes every 20 minutes when using digital screens by looking at something 20 feet away for 20 seconds to reduce eye strain and prevent vision problems.",
-                        category: "Vision",
-                        is_featured: 0,
-                        is_active: 1
+            // Fetch health facts from the API
+            fetch('/api/health-facts')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load health facts');
                     }
-                ];
-
-                displayHealthFacts(healthFacts);
-            } else {
-                // Fetch health facts from the API
-                fetch('/api/health-facts')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to load health facts');
-                        }
-                        return response.json();
-                    })
-                    .then(healthFacts => {
-                        displayHealthFacts(healthFacts);
-                    })
-                    .catch(error => {
-                        console.error('Error loading health facts:', error);
-                        healthFactsGrid.innerHTML = '<p class="error-message">Failed to load health facts. Please try again later.</p>';
-                    });
-            }
+                    return response.json();
+                })
+                .then(healthFacts => {
+                    displayHealthFacts(healthFacts);
+                })
+                .catch(error => {
+                    console.error('Error loading health facts:', error);
+                    healthFactsGrid.innerHTML = '<p class="error-message">Failed to load health facts. Please try again later.</p>';
+                });
         }
 
         // Display health facts from data
@@ -813,54 +711,21 @@
                     e.preventDefault();
                     const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
                     if (searchTerm) {
-                        // For development/testing, use mock data if API is not available
-                        const useMockData = true; // Change to false when API is ready
-
-                        if (useMockData) {
-                            // Mock data for services
-                            const checkupTypes = [
-                                {
-                                    checkup_id: 1,
-                                    name: "General Health Checkup", 
-                                    description: "Comprehensive health assessments to monitor your overall well-being and catch potential issues early.",
-                                    price: 150.00,
-                                    image_path: null,
-                                    is_active: 1
-                                },
-                                {
-                                    checkup_id: 2,
-                                    name: "Dental Checkup", 
-                                    description: "Regular dental examinations and cleaning services to maintain optimal oral health.",
-                                    price: 120.00,
-                                    image_path: null,
-                                    is_active: 1
-                                },
-                                {
-                                    checkup_id: 3,
-                                    name: "Eye Checkup", 
-                                    description: "Vision assessments and eye health screenings conducted by experienced ophthalmologists.",
-                                    price: 100.00,
-                                    image_path: null,
-                                    is_active: 1
-                                },
-                                {
-                                    checkup_id: 4,
-                                    name: "Pregnancy Consultation", 
-                                    description: "Specialized care and advice for expectant mothers throughout their pregnancy journey.",
-                                    price: 180.00,
-                                    image_path: null,
-                                    is_active: 1
-                                },
-                                {
-                                    checkup_id: 5,
-                                    name: "Heart Health Assessment", 
-                                    description: "Detailed cardiovascular evaluations to assess heart function and identify potential risks.",
-                                    price: 200.00,
-                                    image_path: null,
-                                    is_active: 1
-                                }
-                            ];
-
+                        // Fetch all checkup types and filter by search term
+                        fetch("/api/checkup-types", {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            credentials: "include"
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to load checkup types");
+                            }
+                            return response.json();
+                        })
+                        .then(checkupTypes => {
                             // Filter active checkup types that match the search term
                             const filteredCheckups = checkupTypes.filter(checkup => 
                                 checkup.is_active === 1 && 
@@ -870,37 +735,11 @@
 
                             // Display search results
                             displaySearchResults(filteredCheckups, searchTerm);
-                        } else {
-                            // Fetch all checkup types and filter by search term
-                            fetch("/api/checkup-types", {
-                                method: "GET",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                credentials: "include"
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error("Failed to load checkup types");
-                                }
-                                return response.json();
-                            })
-                            .then(checkupTypes => {
-                                // Filter active checkup types that match the search term
-                                const filteredCheckups = checkupTypes.filter(checkup => 
-                                    checkup.is_active === 1 && 
-                                    (checkup.name.toLowerCase().includes(searchTerm) || 
-                                     (checkup.description && checkup.description.toLowerCase().includes(searchTerm)))
-                                );
-
-                                // Display search results
-                                displaySearchResults(filteredCheckups, searchTerm);
-                            })
-                            .catch(error => {
-                                console.error("Error searching checkup types:", error);
-                                alert("Failed to search. Please try again.");
-                            });
-                        }
+                        })
+                        .catch(error => {
+                            console.error("Error searching checkup types:", error);
+                            alert("Failed to search. Please try again.");
+                        });
                     }
                 });
             }
