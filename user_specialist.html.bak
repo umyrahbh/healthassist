@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Specialists - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background-color: #8e0000;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .specialists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .specialist-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .specialist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .specialist-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .specialist-info {
+            padding: 1.5rem;
+        }
+        
+        .specialist-description {
+            margin-bottom: 1.5rem;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .specialist-name {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #b71c1c;
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .specialist-title {
+            font-weight: 400;
+            color: #666;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .specialists-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/user/home">Home</a>
+                <a href="/user/specialist" class="active">Our Specialist</a>
+                <a href="/user/appointment">Appointment</a>
+                <a href="/user/pregnancy-calculator">Pregnancy Calculator</a>
+                <a href="/user/view-appointment">View Appointment</a>
+            </div>
+            <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">Our Specialist</h1>
+        
+        <div class="specialists-grid" id="specialists-container">
+            <!-- Specialists will be loaded dynamically from the database -->
+            <div class="loading-container">
+                <i class="fas fa-spinner fa-spin"></i> Loading specialists...
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load specialists from API
+            const specialistsContainer = document.getElementById('specialists-container');
+            
+            // Fetch specialists from the API
+            fetch('/api/specialists')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load specialists');
+                    }
+                    return response.json();
+                })
+                .then(specialists => {
+                    // Clear loading indicator
+                    specialistsContainer.innerHTML = '';
+                    
+                    // Filter active specialists only
+                    const activeSpecialists = specialists.filter(specialist => specialist.is_active === 1);
+                    
+                    if (activeSpecialists.length === 0) {
+                        specialistsContainer.innerHTML = '<p class="no-data">No specialists available at the moment.</p>';
+                        return;
+                    }
+                    
+                    // Render each specialist
+                    activeSpecialists.forEach(specialist => {
+                        const specialistCard = document.createElement('div');
+                        specialistCard.className = 'specialist-card';
+                        
+                        // Set default image if none provided
+                        const imagePath = specialist.image_path || 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80';
+                        
+                        specialistCard.innerHTML = `
+                            <img src="${imagePath}" alt="${specialist.name}" class="specialist-image">
+                            <div class="specialist-info">
+                                <p class="specialist-description">${specialist.bio || 'Specialist in healthcare services.'}</p>
+                                <p class="specialist-name">${specialist.name.toUpperCase()}</p>
+                                <p class="specialist-title">${specialist.title} - ${specialist.specialization}</p>
+                            </div>
+                        `;
+                        
+                        specialistsContainer.appendChild(specialistCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading specialists:', error);
+                    specialistsContainer.innerHTML = '<p class="error-message">Failed to load specialists. Please try again later.</p>';
+                });
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear local storage
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_type');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+        });
+    </script>
+</body>
+</html>

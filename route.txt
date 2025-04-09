@@ -1,0 +1,1 @@
+@app.route('/api/check_slot_availability', methods=['GET'])

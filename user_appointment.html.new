@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make an Appointment - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background-color: #8e0000;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .appointment-form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .btn-submit {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-submit:hover {
+            background-color: #8e0000;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/user/home">Home</a>
+                <a href="/user/specialist">Our Specialist</a>
+                <a href="/user/appointment" class="active">Appointment</a>
+                <a href="/user/pregnancy-calculator">Pregnancy Calculator</a>
+                <a href="/user/view-appointment">View Appointment</a>
+            </div>
+            <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">Make an Appointment</h1>
+        
+        <div class="appointment-form-container">
+            <div id="success-message" class="success-message">
+                Your appointment has been scheduled successfully!
+            </div>
+            
+            <div id="error-message" class="error-message">
+                There was an error scheduling your appointment. Please try again.
+            </div>
+            
+            <h2 class="form-title">Book Your Appointment</h2>
+            
+            <form id="appointment-form">
+                <div class="form-group">
+                    <label class="form-label" for="appointment-type">Appointment Type</label>
+                    <select class="form-control" id="appointment-type" required>
+                        <option value="">Select Appointment Type</option>
+                        <!-- Checkup types will be loaded from the API -->
+                        <!-- Checkup types will be loaded from the API -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Preferred Doctor</label>
+                    <select class="form-control" id="doctor" required>
+                        <option value="">Select Doctor</option>
+                        <option value="1">Dr. Farah - Pediatrician</option>
+                        <option value="2">Dr. Ramesh - Geriatrician</option>
+                        <option value="3">Dr. Katie - OB-GYN</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="appointment-date">Preferred Date</label>
+                        <input type="date" class="form-control" id="appointment-date" required min="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="appointment-time">Preferred Time</label>
+                        <select class="form-control" id="appointment-time" required>
+                            <option value="">Select Time</option>
+                            <option value="09:00:00">9:00 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="13:00:00">1:00 PM</option>
+                            <option value="14:00:00">2:00 PM</option>
+                            <option value="15:00:00">3:00 PM</option>
+                            <option value="16:00:00">4:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="special-requests">Special Requests/Notes</label>
+                    <textarea class="form-control" id="special-requests" rows="3" placeholder="Any special requests or information you'd like to provide"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">Schedule Appointment</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+ 
+            // Load checkup types from API
+            function loadCheckupTypes() {
+                fetch("/api/checkup_types", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load checkup types");
+                    }
+                    return response.json();
+                })
+                .then(checkupTypes => {
+                    const selectElement = document.getElementById("appointment-type");
+                    
+                    // Clear existing options except the first one
+                    while (selectElement.options.length > 1) {
+                        selectElement.remove(1);
+                    }
+                    
+                    // Add checkup types from API
+                    checkupTypes.forEach(checkup => {
+                        if (checkup.is_active) { // Only show active checkup types
+                            const option = document.createElement("option");
+                            option.value = checkup.checkup_id;
+                            option.textContent = `${checkup.name} - $${checkup.price}`;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading checkup types:", error);
+                    showError("Failed to load appointment types. Please refresh the page.");
+                });
+            }
+            
+            // Call function to load checkup types
+            loadCheckupTypes();
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear local storage
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_type');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointment-date').setAttribute('min', today);
+            
+            // Handle appointment form submission
+            // Check slot availability when date, time and checkup type are selected
+            function checkSlotAvailability() {
+                const appointmentDate = document.getElementById("appointment-date").value;
+                const appointmentTime = document.getElementById("appointment-time").value;
+                const checkupId = document.getElementById("appointment-type").value;
+                
+                if (!appointmentDate || !appointmentTime || !checkupId) {
+                    return; // Don't check if any values are missing
+                }
+                
+                const url = `/api/check-slot-availability?date=${appointmentDate}&time=${appointmentTime}&checkup_id=${checkupId}`;
+                
+                fetch(url, {
+                    method: "GET",
+                    credentials: "include"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Failed to check availability");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.is_available) {
+                        showError(`This time slot is fully booked. Only ${data.slots_remaining} slots remain out of ${data.max_slots}.`);
+                        document.querySelector(".btn-submit").disabled = true;
+                    } else {
+                        // Clear any error and enable submit button
+                        document.getElementById("error-message").style.display = "none";
+                        document.querySelector(".btn-submit").disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking slot availability:", error);
+                });
+            }
+            
+            // Add event listeners to check availability when selections change
+            document.getElementById("appointment-date").addEventListener("change", checkSlotAvailability);
+            document.getElementById("appointment-time").addEventListener("change", checkSlotAvailability);
+            document.getElementById("appointment-type").addEventListener("change", checkSlotAvailability);
+            document.getElementById('appointment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const appointmentType = document.getElementById('appointment-type').value;
+                const doctor = document.getElementById('doctor').value;
+                const appointmentDate = document.getElementById('appointment-date').value;
+                const appointmentTime = document.getElementById('appointment-time').value;
+                const specialRequests = document.getElementById('special-requests').value;
+                
+                // Prepare the appointment data
+                const appointmentData = {
+                    appointment_date: appointmentDate,
+                    appointment_time: appointmentTime,
+                    checkup_name: appointmentType,
+                    // In a real app, you could include doctor_id and special requests
+                };
+                
+                // Create a checkout session that will redirect to Stripe
+                fetch("/api/create-checkout-session", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(appointmentData),
+                    credentials: 'include' // Include cookies for authentication
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Failed to create checkout session");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Checkout session created:", data);
+                    if (data.url) {
+                        // Redirect to Stripe checkout
+                        window.location.href = data.url;
+                    } else {
+                        showError("Failed to create checkout session. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error creating checkout session:", error);
+                    showError(error.message || "Failed to process payment. Please try again.");
+                });
+            });
+            
+            function showSuccess() {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showError(message) {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                // Hide error message after 5 seconds
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

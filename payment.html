@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .payment-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+        
+        .appointment-details {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #b71c1c;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .price-section {
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .price-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #b71c1c;
+        }
+        
+        .price-label {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .btn-pay {
+            display: block;
+            width: 100%;
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-pay:hover {
+            background-color: #8e0000;
+        }
+        
+        .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+        
+        .secure-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .secure-info i {
+            margin-right: 5px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h1 class="page-title">Appointment Payment</h1>
+        
+        <div class="appointment-details" id="appointment-details">
+            <!-- This will be populated by JavaScript -->
+        </div>
+        
+        <div class="price-section">
+            <div class="price-amount">RM99.00</div>
+            <div class="price-label">One-time payment</div>
+        </div>
+        
+        <button id="btn-checkout" class="btn-pay">Proceed to Checkout</button>
+        
+        <a href="/user/appointment" class="cancel-link">Cancel and return to appointments</a>
+        
+        <div class="secure-info">
+            <i class="fas fa-lock"></i> Secure payment processed by Stripe
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get appointment ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const appointmentId = urlParams.get('appointment_id');
+            
+            if (!appointmentId) {
+                window.location.href = '/user/appointment';
+                return;
+            }
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_type');
+                window.location.href = '/logout';
+            });
+            
+            // Fetch appointment details
+            fetch(`/api/appointments/${appointmentId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch appointment details');
+                    }
+                    return response.json();
+                })
+                .then(appointment => {
+                    // Display appointment details
+                    const detailsContainer = document.getElementById('appointment-details');
+                    detailsContainer.innerHTML = `
+                        <div class="detail-row">
+                            <span class="detail-label">Appointment Type:</span>
+                            <span>${appointment.checkup_name}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Date:</span>
+                            <span>${formatDate(appointment.appointment_date)}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Time:</span>
+                            <span>${formatTime(appointment.appointment_time)}</span>
+                        </div>
+                    `;
+                    
+                    // Handle checkout button
+                    document.getElementById('btn-checkout').addEventListener('click', function() {
+                        createCheckoutSession(appointment);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching appointment:', error);
+                    window.location.href = '/user/appointment';
+                });
+            
+            function createCheckoutSession(appointment) {
+                const paymentData = {
+                    appointment_date: appointment.appointment_date,
+                    appointment_time: appointment.appointment_time,
+                    checkup_name: appointment.checkup_name
+                };
+                
+                fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(paymentData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to create checkout session');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.url) {
+                        window.location.href = data.url;
+                    } else {
+                        throw new Error('Invalid checkout response');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating checkout session:', error);
+                    alert('Failed to process payment. Please try again.');
+                });
+            }
+            
+            // Helper functions for formatting
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+            
+            function formatTime(timeString) {
+                const [hours, minutes] = timeString.split(':');
+                const hour = parseInt(hours);
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const hour12 = hour % 12 || 12;
+                return `${hour12}:${minutes} ${ampm}`;
+            }
+        });
+    </script>
+</body>
+</html>

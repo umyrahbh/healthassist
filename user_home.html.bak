@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Facts and Tips - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background-color: #8e0000;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .health-facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .health-fact-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .health-fact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .health-fact-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .health-fact-text {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        
+        .health-fact-tip {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .health-facts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/user/home" class="active">Home</a>
+                <a href="/user/specialist">Our Specialist</a>
+                <a href="/user/appointment">Appointment</a>
+                <a href="/user/pregnancy-calculator">Pregnancy Calculator</a>
+                <a href="/user/view-appointment">View Appointment</a>
+            </div>
+            <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">Health Facts and Tips</h1>
+        
+        <div class="health-facts-grid">
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">Regular physical activity</h3>
+                <p class="health-fact-text">can reduce the risk of chronic diseases like diabetes, heart disease, and stroke.</p>
+                <p class="health-fact-tip">Tip: Aim for at least 30 minutes of moderate exercise, like brisk walking, five times a week.</p>
+            </div>
+            
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">Social interactions</h3>
+                <p class="health-fact-text">improve mental and emotional health in older adults.</p>
+                <p class="health-fact-tip">Tip: Encourage participation in community activities or regular family visits.</p>
+            </div>
+            
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">Regular prenatal checkups</h3>
+                <p class="health-fact-text">reduce the risk of complications during pregnancy.</p>
+                <p class="health-fact-tip">Tip: Schedule routine checkups and ask about any concerns.</p>
+            </div>
+            
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">1 in 5 adults</h3>
+                <p class="health-fact-text">experiences mental health issues each year.</p>
+                <p class="health-fact-tip">Tip: Practice mindfulness, stay physically active, and seek help if needed.</p>
+            </div>
+            
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">Deep breathing</h3>
+                <p class="health-fact-text">can help reduce stress and anxiety.</p>
+                <p class="health-fact-tip">Tip: Try inhaling deeply for 4 seconds, holding for 7 seconds, and exhaling for 8 seconds.</p>
+            </div>
+            
+            <div class="health-fact-card">
+                <h3 class="health-fact-title">Breastfeeding</h3>
+                <p class="health-fact-text">can strengthen a baby's immune system.</p>
+                <p class="health-fact-tip">Tip: Aim to exclusively breastfeed for the first six months if possible.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear local storage
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_id');
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_type');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+        });
+    </script>
+</body>
+</html>

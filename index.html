@@ -1,1 +1,1202 @@
-HELLO
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthAssist - Your Health, Our Priority</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/health-facts.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding-bottom: 1;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+            margin-left: 2rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #8e0000;
+        }
+
+        /* Search bar styles */
+        .search-bar-container {
+            background-color: #f5f5f5;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .search-form {
+            position: relative;
+            display: inline-block;
+            max-width: 600px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #b71c1c;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        .appointment-form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #8e0000;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-right {
+                flex-direction: column;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .nav-actions {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .search-container {
+                margin-right: 0;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+                <span>HealthAssist</span>
+            </a>
+            <nav>
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <!-- These links will be shown when user is not logged in -->
+                <ul class="nav-links" id="nav-links-guest">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="login.html" class="login-btn" style="display: inline-block; padding: 8px 15px; min-width: 80px; font-weight: 600; text-align: center; color: #fff; background-color: #b71c1c; border-radius: 4px; text-decoration: none;">Login</a></li>
+                    <li><a href="signup" class="signup-btn">Sign Up</a></li>
+                </ul>
+                <!-- These links will be shown when user is logged in -->
+                <ul class="nav-links" id="nav-links-user" style="display: none;">
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="/user/specialist">Our Specialist</a></li>
+                    <li><a href="/user/appointment">Appointment</a></li>
+                    <li><a href="/user/pregnancy-calculator">Pregnancy Calculator</a></li>
+                    <li><a href="/user/view-appointment">View Appointment</a></li>
+                    <li><a href="#" id="logout-btn" class="logout-btn">Logout</a></li>
+                </ul>
+              
+            </nav>
+        </div>
+       
+    </header>
+    <div class="search-bar-container">
+        <form id="search-form" class="search-form">
+            <input type="text" id="search-input" class="search-input" placeholder="Search for checkup types...">
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-box">
+                <h1 class="hero-title">Your Health, <span>Our Priority</span></h1>
+                <p class="hero-subtitle">HealthAssist helps you manage your healthcare needs with ease. Schedule appointments, access your medical records, and connect with healthcare professionals.</p>
+                <div class="cta-buttons">
+                    <a href="signup" class="btn btn-primary">Get Started</a>
+                    <a href="#services" class="btn btn-outline">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="about">
+        <h2 class="section-title">Why Choose <span>HealthAssist</span></h2>
+        <div class="features-container">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <h3 class="feature-title">Easy Appointment Scheduling</h3>
+                <p class="feature-text">Book appointments with your healthcare providers in just a few clicks. No more waiting on phone calls or long queues.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h3 class="feature-title">Digital Health Records</h3>
+                <p class="feature-text">Access your complete medical history, prescriptions, and test results anytime, anywhere.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="feature-title">Connect with Specialists</h3>
+                <p class="feature-text">Consult with healthcare professionals through secure messaging and video calls.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <h2 class="section-title">Our <span>Services</span></h2>
+        <div class="services-container">
+            <div class="services-grid">
+                <!-- Services will be loaded dynamically from the database -->
+                <div class="loading">Loading services...</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="health-facts" id="health-facts">
+        <h2 class="section-title">Health <span>Facts</span></h2>
+        <div class="health-facts-container">
+            <div id="health-facts-grid" class="health-facts-grid">
+                <!-- Health facts will be loaded dynamically from the database -->
+                <div class="loading">Loading health facts...</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <h2 class="section-title">What Our <span>Patients Say</span></h2>
+        <div class="testimonials-container">
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"HealthAssist has completely transformed how I manage my healthcare. Booking appointments is now hassle-free, and I love having all my medical records in one place."</p>
+                    <div class="testimonial-author">
+                        <img src="assets/patient1.jpg" alt="Sarah J." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Regular Patient</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"As someone with a busy schedule, I appreciate how easy HealthAssist makes it to schedule appointments and get reminders. The interface is intuitive and user-friendly."</p>
+                    <div class="testimonial-author">
+                        <img src="assets/patient2.jpg" alt="Michael C." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Regular Patient</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"The ability to access my medical history whenever I need it has been invaluable. HealthAssist provides a secure and comprehensive way to manage my healthcare needs."</p>
+                    <div class="testimonial-author">
+                        <img src="assets/patient3.jpg" alt="Lisa G." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Lisa Garcia</h4>
+                            <p>Regular Patient</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-container">
+            <h2 class="cta-title">Ready to Take Control of Your Health?</h2>
+            <p class="cta-text">Join thousands of users who have simplified their healthcare management with HealthAssist.</p>
+            <a href="signup" class="btn btn-light">Get Started Today</a>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-column">
+                <a href="index.html" class="footer-logo">
+                    <img src="/logo.jpg" alt="HealthAssist Logo">
+                    <span>HealthAssist</span>
+                </a>
+                <p class="footer-text">We're committed to making healthcare management simpler and more accessible for everyone.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Quick Links</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Home</a></li>
+                    <li class="footer-link"><a href="#services">Our Services</a></li>
+                    <li class="footer-link"><a href="#about">About Us</a></li>
+                    <li class="footer-link"><a href="#testimonials">Testimonials</a></li>
+                    <li class="footer-link"><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Our Services</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">General Health Checkup</a></li>
+                    <li class="footer-link"><a href="#">Dental Care</a></li>
+                    <li class="footer-link"><a href="#">Eye Care</a></li>
+                    <li class="footer-link"><a href="#">Prenatal Care</a></li>
+                    <li class="footer-link"><a href="#">Immunizations</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3 class="footer-title">Contact Info</h3>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Healthcare Ave, Medical District, City, Country</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>info@healthassist.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Mon-Fri: 8:30 AM - 6:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 HealthAssist. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Check if user is logged in
+        function checkLoginStatus() {
+            // Get user data from session storage (set during login)
+            const userData = sessionStorage.getItem('userData');
+
+            if (userData) {
+                // User is logged in
+                const user = JSON.parse(userData);
+                // Set global variables for login status
+                window.userLoggedIn = true;
+                window.currentUser = user;
+                showLoggedInUI(user);
+                return true;
+            } else {
+                // User is not logged in
+                window.userLoggedIn = false;
+                window.currentUser = null;
+                showLoggedOutUI();
+                return false;
+            }
+        }
+
+        // Show UI for logged in users
+        function showLoggedInUI(user) {
+            const guestLinks = document.getElementById('nav-links-guest');
+            const userLinks = document.getElementById('nav-links-user');
+            const searchContainer = document.querySelector('.search-bar-container');
+
+            if (guestLinks) guestLinks.style.display = 'none';
+            if (userLinks) userLinks.style.display = 'flex';
+            if (searchContainer) searchContainer.style.display = 'flex';
+
+            // Hide the hero CTA section if user is logged in
+            const heroButtons = document.querySelector('.cta-buttons');
+            if (heroButtons) {
+                heroButtons.style.display = 'none';
+            }
+
+            // Hide the sign-up CTA section if user is logged in
+            const signupCTA = document.querySelector('.cta');
+            if (signupCTA) {
+                signupCTA.style.display = 'none';
+            }
+
+            // Load dynamic content from the database
+            loadServices();
+            loadHealthFacts();
+        }
+
+        // Show UI for logged out users
+        function showLoggedOutUI() {
+            const guestLinks = document.getElementById('nav-links-guest');
+            const userLinks = document.getElementById('nav-links-user');
+            const searchContainer = document.querySelector('.search-bar-container');
+
+            if (guestLinks) guestLinks.style.display = 'flex';
+            if (userLinks) userLinks.style.display = 'none';
+            if (searchContainer) searchContainer.style.display = 'none';
+        }
+
+        // Load services (checkup types) from the database
+        function loadServices() {
+            // Replace the static service cards with dynamic content from the database
+            const servicesGrid = document.querySelector('.services-grid');
+            if (!servicesGrid) return;
+
+            servicesGrid.innerHTML = '<div class="loading">Loading services...</div>';
+
+            // For development/testing, use mock data if API is not available
+            const useMockData = true; // Change to false when API is ready
+
+            if (useMockData) {
+                // Mock data for services
+                const checkupTypes = [
+                    {
+                        checkup_id: 1,
+                        name: "General Health Checkup", 
+                        description: "Comprehensive health assessments to monitor your overall well-being and catch potential issues early.",
+                        price: 150.00,
+                        image_path: null,
+                        is_active: 1
+                    },
+                    {
+                        checkup_id: 2,
+                        name: "Dental Checkup", 
+                        description: "Regular dental examinations and cleaning services to maintain optimal oral health.",
+                        price: 120.00,
+                        image_path: null,
+                        is_active: 1
+                    },
+                    {
+                        checkup_id: 3,
+                        name: "Eye Checkup", 
+                        description: "Vision assessments and eye health screenings conducted by experienced ophthalmologists.",
+                        price: 100.00,
+                        image_path: null,
+                        is_active: 1
+                    },
+                    {
+                        checkup_id: 4,
+                        name: "Pregnancy Consultation", 
+                        description: "Specialized care and advice for expectant mothers throughout their pregnancy journey.",
+                        price: 180.00,
+                        image_path: null,
+                        is_active: 1
+                    },
+                    {
+                        checkup_id: 5,
+                        name: "Heart Health Assessment", 
+                        description: "Detailed cardiovascular evaluations to assess heart function and identify potential risks.",
+                        price: 200.00,
+                        image_path: null,
+                        is_active: 1
+                    }
+                ];
+
+                displayServices(checkupTypes);
+            } else {
+                // Real API call
+                fetch('/api/checkup-types')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load services');
+                        }
+                        return response.json();
+                    })
+                    .then(checkupTypes => {
+                        displayServices(checkupTypes);
+                    })
+                    .catch(error => {
+                        console.error('Error loading services:', error);
+                        servicesGrid.innerHTML = '<p class="error-message">Failed to load services. Please try again later.</p>';
+                    });
+            }
+        }
+
+        // Display services from data
+        function displayServices(checkupTypes) {
+            const servicesGrid = document.querySelector('.services-grid');
+            if (!servicesGrid) return;
+
+            // Filter active checkup types
+            const activeCheckups = checkupTypes.filter(checkup => checkup.is_active === 1);
+
+            if (activeCheckups.length === 0) {
+                servicesGrid.innerHTML = '<p class="no-data">No services available at the moment.</p>';
+                return;
+            }
+
+            // Clear container
+            servicesGrid.innerHTML = '';
+
+            // Render each checkup type as a service card
+            activeCheckups.forEach(checkup => {
+                // Use default image if none is provided
+                const imagePath = checkup.image_path 
+                    ? '/' + checkup.image_path 
+                    : 'assets/general-checkup.jpg';
+
+                // Format price to show RM currency
+                const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);
+
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.innerHTML = `
+                    <img src="${imagePath}" alt="${checkup.name}" class="service-img">
+                    <div class="service-content">
+                        <h3 class="service-title">${checkup.name}</h3>
+                        <p class="service-text">${checkup.description || 'No description available.'}</p>
+                        <p class="service-price">${formattedPrice}</p>
+                        <a href="${window.userLoggedIn ? '/user/appointment?checkup=' + checkup.checkup_id : '/login.html'}" class="read-more">
+                            ${window.userLoggedIn ? 'Book Appointment' : 'Login to Book'} <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `;
+
+                servicesGrid.appendChild(serviceCard);
+            });
+        }
+
+        // Load health facts from the database
+        function loadHealthFacts() {
+            // Get the health facts container
+            const healthFactsGrid = document.getElementById('health-facts-grid');
+            if (!healthFactsGrid) return;
+
+            // Show loading indicator
+            healthFactsGrid.innerHTML = '<div class="loading">Loading health facts...</div>';
+
+            // For development/testing, use mock data if API is not available
+            const useMockData = true; // Change to false when API is ready
+
+            if (useMockData) {
+                // Mock data for health facts
+                const healthFacts = [
+                    {
+                        fact_id: 1,
+                        title: "The Importance of Hydration",
+                        content: "Drinking adequate water daily is essential for optimal bodily functions. Aim for at least 8 glasses of water per day to maintain proper hydration.",
+                        category: "Nutrition",
+                        is_featured: 1,
+                        is_active: 1
+                    },
+                    {
+                        fact_id: 2,
+                        title: "Benefits of Regular Exercise",
+                        content: "Just 30 minutes of moderate physical activity daily can significantly reduce the risk of heart disease, improve mental health, and increase longevity.",
+                        category: "Fitness",
+                        is_featured: 1,
+                        is_active: 1
+                    },
+                    {
+                        fact_id: 3,
+                        title: "Sleep and Health",
+                        content: "Adults should aim for 7-9 hours of quality sleep per night. Consistent sleep patterns help regulate metabolism, improve cognitive function, and strengthen immune response.",
+                        category: "Wellness",
+                        is_featured: 0,
+                        is_active: 1
+                    },
+                    {
+                        fact_id: 4,
+                        title: "Dental Health Tips",
+                        content: "Brush teeth twice daily, floss regularly, and schedule dental checkups every six months to maintain optimal oral health and prevent cavities.",
+                        category: "Dental",
+                        is_featured: 0,
+                        is_active: 1
+                    },
+                    {
+                        fact_id: 5,
+                        title: "Eye Care Essentials",
+                        content: "Rest your eyes every 20 minutes when using digital screens by looking at something 20 feet away for 20 seconds to reduce eye strain and prevent vision problems.",
+                        category: "Vision",
+                        is_featured: 0,
+                        is_active: 1
+                    }
+                ];
+
+                displayHealthFacts(healthFacts);
+            } else {
+                // Fetch health facts from the API
+                fetch('/api/health-facts')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load health facts');
+                        }
+                        return response.json();
+                    })
+                    .then(healthFacts => {
+                        displayHealthFacts(healthFacts);
+                    })
+                    .catch(error => {
+                        console.error('Error loading health facts:', error);
+                        healthFactsGrid.innerHTML = '<p class="error-message">Failed to load health facts. Please try again later.</p>';
+                    });
+            }
+        }
+
+        // Display health facts from data
+        function displayHealthFacts(healthFacts) {
+            const healthFactsGrid = document.getElementById('health-facts-grid');
+            if (!healthFactsGrid) return;
+
+            // Filter active health facts
+            const activeHealthFacts = healthFacts.filter(fact => fact.is_active === 1);
+
+            if (activeHealthFacts.length === 0) {
+                healthFactsGrid.innerHTML = '<p class="no-data">No health facts available at the moment.</p>';
+                return;
+            }
+
+            // Clear container
+            healthFactsGrid.innerHTML = '';
+
+            // Render each health fact
+            activeHealthFacts.forEach(fact => {
+                const factCard = document.createElement('div');
+                factCard.className = 'health-fact-card';
+
+                // Add featured badge if applicable
+                const featuredBadge = fact.is_featured === 1 
+                    ? '<span class="featured-badge">Featured</span>' 
+                    : '';
+
+                factCard.innerHTML = `
+                    ${featuredBadge}
+                    <div class="health-fact-header">
+                        <h3 class="health-fact-title">${fact.title}</h3>
+                        ${fact.category ? `<span class="health-fact-category">${fact.category}</span>` : ''}
+                    </div>
+                    <div class="health-fact-content">
+                        <p>${fact.content}</p>
+                    </div>
+                `;
+
+                healthFactsGrid.appendChild(factCard);
+            });
+        }
+
+        // Handle logout
+        function setupLogout() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Clear session data
+                    sessionStorage.removeItem('userData');
+
+                    // Redirect to home or login page
+                    window.location.href = '/login.html';
+                });
+            }
+        }
+
+        // Search functionality for checkup types
+        function setupSearchFunctionality() {
+            const searchForm = document.getElementById('search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+                    if (searchTerm) {
+                        // For development/testing, use mock data if API is not available
+                        const useMockData = true; // Change to false when API is ready
+
+                        if (useMockData) {
+                            // Mock data for services
+                            const checkupTypes = [
+                                {
+                                    checkup_id: 1,
+                                    name: "General Health Checkup", 
+                                    description: "Comprehensive health assessments to monitor your overall well-being and catch potential issues early.",
+                                    price: 150.00,
+                                    image_path: null,
+                                    is_active: 1
+                                },
+                                {
+                                    checkup_id: 2,
+                                    name: "Dental Checkup", 
+                                    description: "Regular dental examinations and cleaning services to maintain optimal oral health.",
+                                    price: 120.00,
+                                    image_path: null,
+                                    is_active: 1
+                                },
+                                {
+                                    checkup_id: 3,
+                                    name: "Eye Checkup", 
+                                    description: "Vision assessments and eye health screenings conducted by experienced ophthalmologists.",
+                                    price: 100.00,
+                                    image_path: null,
+                                    is_active: 1
+                                },
+                                {
+                                    checkup_id: 4,
+                                    name: "Pregnancy Consultation", 
+                                    description: "Specialized care and advice for expectant mothers throughout their pregnancy journey.",
+                                    price: 180.00,
+                                    image_path: null,
+                                    is_active: 1
+                                },
+                                {
+                                    checkup_id: 5,
+                                    name: "Heart Health Assessment", 
+                                    description: "Detailed cardiovascular evaluations to assess heart function and identify potential risks.",
+                                    price: 200.00,
+                                    image_path: null,
+                                    is_active: 1
+                                }
+                            ];
+
+                            // Filter active checkup types that match the search term
+                            const filteredCheckups = checkupTypes.filter(checkup => 
+                                checkup.is_active === 1 && 
+                                (checkup.name.toLowerCase().includes(searchTerm) || 
+                                 (checkup.description && checkup.description.toLowerCase().includes(searchTerm)))
+                            );
+
+                            // Display search results
+                            displaySearchResults(filteredCheckups, searchTerm);
+                        } else {
+                            // Fetch all checkup types and filter by search term
+                            fetch("/api/checkup-types", {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                credentials: "include"
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Failed to load checkup types");
+                                }
+                                return response.json();
+                            })
+                            .then(checkupTypes => {
+                                // Filter active checkup types that match the search term
+                                const filteredCheckups = checkupTypes.filter(checkup => 
+                                    checkup.is_active === 1 && 
+                                    (checkup.name.toLowerCase().includes(searchTerm) || 
+                                     (checkup.description && checkup.description.toLowerCase().includes(searchTerm)))
+                                );
+
+                                // Display search results
+                                displaySearchResults(filteredCheckups, searchTerm);
+                            })
+                            .catch(error => {
+                                console.error("Error searching checkup types:", error);
+                                alert("Failed to search. Please try again.");
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        // Function to display search results
+        function displaySearchResults(results, searchTerm) {
+            // Remove any existing modal
+            const existingModal = document.querySelector('.search-modal');
+            if (existingModal) {
+                document.body.removeChild(existingModal);
+            }
+
+            // Create modal or overlay for search results
+            let searchResultsHTML = '';
+
+            if (results.length === 0) {
+                searchResultsHTML = `<p>No checkup types found matching "${searchTerm}"</p>`;
+            } else {
+                searchResultsHTML = `
+                    <h3>Search Results for "${searchTerm}"</h3>
+                    <div class="search-results-list">
+                `;
+
+                results.forEach(checkup => {
+                    const imagePath = checkup.image_path ? '/' + checkup.image_path : 'assets/general-checkup.jpg';
+                    const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);
+
+                    searchResultsHTML += `
+                        <div class="search-result-item">
+                            <img src="${imagePath}" alt="${checkup.name}" class="search-result-image">
+                            <div class="search-result-content">
+                                <h4>${checkup.name}</h4>
+                                <p>${checkup.description || 'No description available'}</p>
+                                <p class="search-result-price">${formattedPrice}</p>
+                                <a href="${window.userLoggedIn ? '/user/appointment?checkup=' + checkup.checkup_id : '/login.html'}" class="select-checkup-btn">
+                                    ${window.userLoggedIn ? 'Book this Checkup' : 'Login to Book'}
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                searchResultsHTML += `</div>`;
+            }
+
+            // Create modal with search results
+            const searchModal = document.createElement('div');
+            searchModal.className = 'search-modal';
+            searchModal.innerHTML = `
+                <div class="search-modal-content">
+                    <span class="close-search-modal">&times;</span>
+                    <div class="search-results-container">
+                        ${searchResultsHTML}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(searchModal);
+
+            // Add styles for the search modal if not already added
+            if (!document.getElementById('search-modal-styles')) {
+                const modalStyles = document.createElement('style');
+                modalStyles.id = 'search-modal-styles';
+                modalStyles.textContent = `
+                    .search-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1100;
+                    }
+
+                    .search-modal-content {
+                        background-color: white;
+                        border-radius: 8px;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        position: relative;
+                        padding: 20px;
+                    }
+
+                    .close-search-modal {
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        font-size: 24px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        color: #888;
+                    }
+
+                    .close-search-modal:hover {
+                        color: #333;
+                    }
+
+                    .search-results-container {
+                        padding: 10px 0;
+                    }
+
+                    .search-results-container h3 {
+                        margin-bottom: 20px;
+                        color: #333;
+                        text-align: center;
+                    }
+
+                    .search-result-item {
+                        display: flex;
+                        margin-bottom: 20px;
+                        padding-bottom: 20px;
+                        border-bottom: 1px solid #eee;
+                    }
+
+                    .search-result-image {
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                        border-radius: 6px;
+                        margin-right: 15px;
+                    }
+
+                    .search-result-content {
+                        flex: 1;
+                    }
+
+                    .search-result-content h4 {
+                        color: #b71c1c;
+                        margin: 0 0 10px 0;
+                    }
+
+                    .search-result-content p {
+                        color: #666;
+                        margin-bottom: 10px;
+                        font-size: 14px;
+                    }
+
+                    .search-result-price {
+                        font-weight: bold;
+                        color: #333;
+                    }
+
+                    .select-checkup-btn {
+                        background-color: #b71c1c;
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: 500;
+                        margin-top: 10px;
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+
+                    .select-checkup-btn:hover {
+                        background-color: #8e0000;
+                    }
+
+                    @media (max-width: 600px) {
+                        .search-result-item {
+                            flex-direction: column;
+                        }
+
+                        .search-result-image {
+                            width: 100%;
+                            height: 150px;
+                            margin-right: 0;
+                            margin-bottom: 15px;
+                        }
+                    }
+                `;
+
+                document.head.appendChild(modalStyles);
+            }
+
+            // Handle close button click
+            const closeButton = document.querySelector('.close-search-modal');
+            if (closeButton) {
+                closeButton.addEventListener('click', function() {
+                    const modal = document.querySelector('.search-modal');
+                    if (modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+
+            // Handle clicking outside to close
+            searchModal.addEventListener('click', function(e) {
+                if (e.target === searchModal) {
+                    document.body.removeChild(searchModal);
+                }
+            });
+        }
+
+        // Mobile menu toggle
+        function setupMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            if (!menuToggle) return;
+
+            menuToggle.addEventListener('click', function() {
+                // Read the global login status
+                const userLoggedIn = window.userLoggedIn;
+
+                if (userLoggedIn) {
+                    const userLinks = document.getElementById('nav-links-user');
+                    if (userLinks) userLinks.classList.toggle('active');
+                } else {
+                    const guestLinks = document.getElementById('nav-links-guest');
+                    if (guestLinks) guestLinks.classList.toggle('active');
+                }
+            });
+        }
+
+        // Smooth scrolling for anchor links
+        function setupSmoothScrolling() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') return;
+
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+
+                        // Close mobile menu if open
+                        // Read the global login status
+                        const userLoggedIn = window.userLoggedIn;
+                        if (userLoggedIn) {
+                            const userLinks = document.getElementById('nav-links-user');
+                            if (userLinks) userLinks.classList.remove('active');
+                        } else {
+                            const guestLinks = document.getElementById('nav-links-guest');
+                            if (guestLinks) guestLinks.classList.remove('active');
+                        }
+                    }
+                });
+            });
+        }
+
+        // Header scroll effect
+        function setupHeaderScrollEffect() {
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (!header) return;
+
+                if (window.scrollY > 50) {
+                    header.style.padding = '0.5rem 0';
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.padding = '';
+                    header.style.boxShadow = '';
+                }
+            });
+        }
+
+        // Add dummy user data for testing
+        function addTestUser() {
+            // Uncomment this to test logged-in UI
+            /*
+            const testUser = {
+                user_id: 1,
+                user_name: "Test User",
+                email: "test@example.com",
+                user_type: "Normal"
+            };
+            sessionStorage.setItem('userData', JSON.stringify(testUser));
+            */
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add test user for development if needed
+            addTestUser();
+
+            // Setup all functionality
+            checkLoginStatus();
+            setupLogout();
+            setupMobileMenu();
+            setupSmoothScrolling();
+            setupHeaderScrollEffect();
+            setupSearchFunctionality();
+
+            // Load services and health facts for both logged-in and logged-out users
+            loadServices();
+            loadHealthFacts();
+        });
+    </script>
+</body>
+</html>

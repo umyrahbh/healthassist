@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Appointment - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+        /* Search bar styles */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .search-form {
+            display: flex;
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #b71c1c;
+        }
+        
+        .search-button {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            padding: 8px 12px;
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+        }
+        
+        .search-button:hover {
+            background-color: #8e0000;
+        }
+            background-color: #8e0000;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .appointments-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .appointments-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .appointments-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+        
+        .appointment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .appointment-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .appointment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .appointment-date {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .appointment-details {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .no-appointments {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        .reminder-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .reminder-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .reminder-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .reminder-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 0.75rem;
+        }
+        
+        .reminder-item:before {
+            content: "•";
+            color: #b71c1c;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .appointments-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/user/specialist">Our Specialist</a>
+                <a href="/user/appointment">Appointment</a>
+                <a href="/user/pregnancy-calculator">Pregnancy Calculator</a>
+                <a href="/user/view-appointment" class="active">View Appointment</a>
+            </div>
+
+            <div class="search-container">
+                <form id="search-form" class="search-form">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search...">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">View Appointment</h1>
+        
+        <div class="appointments-container">
+            <div class="appointments-card">
+                <h2 class="appointments-title">Your Appointments</h2>
+                
+                <div id="appointments-list-container">
+                    <p class="no-appointments">No appointments found.</p>
+                </div>
+            </div>
+            
+            <div class="appointments-card">
+                <div class="reminder-card">
+                    <h3 class="reminder-title">To ensure a smooth and hassle-free checkup experience, please remember to bring the following:</h3>
+                    
+                    <ul class="reminder-list">
+                        <li class="reminder-item">Your Identification Card (IC)</li>
+                        <li class="reminder-item">Medical Records (if applicable)</li>
+                        <li class="reminder-item">Your Appointment Confirmation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout functionality
+            
+            // Search functionality
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = document.getElementById('search-input').value.trim();
+                if (searchTerm) {
+                    // You can implement the search functionality here
+                    alert('Search functionality will be implemented for: ' + searchTerm);
+                    // Example of search implementation:
+                    // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+                }
+            });
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear session storage (consistent with new storage method)
+                sessionStorage.removeItem('userData');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+            
+            // Get the current user data from sessionStorage
+            let userData = null;
+            try {
+                userData = JSON.parse(sessionStorage.getItem('userData'));
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+            
+            const userId = userData?.user_id;
+            
+            if (userId) {
+                // Fetch user's appointments
+                fetch(`/api/users/${userId}/appointments`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch appointments');
+                        }
+                        return response.json();
+                    })
+                    .then(appointments => {
+                        displayAppointments(appointments);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching appointments:', error);
+                    });
+            }
+            
+            function displayAppointments(appointments) {
+                const container = document.getElementById('appointments-list-container');
+                
+                if (appointments.length === 0) {
+                    container.innerHTML = '<p class="no-appointments">No appointments found.</p>';
+                    return;
+                }
+                
+                // Sort appointments by date and time (most recent first)
+                appointments.sort((a, b) => {
+                    const dateA = new Date(`${a.appointment_date}T${a.appointment_time}`);
+                    const dateB = new Date(`${b.appointment_date}T${b.appointment_time}`);
+                    return dateA - dateB; // Ascending order (upcoming first)
+                });
+                
+                const html = `
+                    <ul class="appointment-list">
+                        ${appointments.map(appointment => {
+                            // Format date
+                            const date = new Date(`${appointment.appointment_date}T${appointment.appointment_time}`);
+                            const formattedDate = date.toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+                            
+                            // Format time
+                            const formattedTime = date.toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                            
+                            return `
+                                <li class="appointment-item">
+                                    <div class="appointment-date">${formattedDate}</div>
+                                    <div class="appointment-details">
+                                        <span>${formattedTime}</span>
+                                        <span>${appointment.checkup_name}</span>
+                                    </div>
+                                </li>
+                            `;
+                        }).join('')}
+                    </ul>
+                `;
+                
+                container.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>

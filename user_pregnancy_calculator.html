@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Calculator - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+        /* Search bar styles */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .search-form {
+            display: flex;
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #b71c1c;
+        }
+        
+        .search-button {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            padding: 8px 12px;
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+        }
+        
+        .search-button:hover {
+            background-color: #8e0000;
+        }
+            background-color: #8e0000;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .calculator-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .calculator-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .calculator-title {
+            color: #b71c1c;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn-calculate {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-calculate:hover {
+            background-color: #8e0000;
+        }
+        
+        .result-section {
+            margin-top: 2rem;
+        }
+        
+        .result-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #b71c1c;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .calculator-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+            </div>
+            <div class="nav-menu">
+                <a href="/">Home</a>
+                <a href="/user/specialist">Our Specialist</a>
+                <a href="/user/appointment">Appointment</a>
+                <a href="/user/pregnancy-calculator" class="active">Pregnancy Calculator</a>
+                <a href="/user/view-appointment">View Appointment</a>
+            </div>
+
+            <div class="search-container">
+                <form id="search-form" class="search-form">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search...">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <button id="logout-btn" class="btn-logout">Logout</button>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">Pregnancy Calculator</h1>
+        
+        <div class="calculator-container">
+            <div class="calculator-card">
+                <h2 class="calculator-title">Estimate Your Due Date</h2>
+                
+                <form id="pregnancy-calculator-form">
+                    <div class="form-group">
+                        <label class="form-label">Date of Last Menstrual Period (LMP)</label>
+                        <input type="date" class="form-control" id="lmp-date" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-calculate">Calculate Due Date</button>
+                </form>
+                
+                <div class="result-section" id="result-section" style="display: none;">
+                    <h3 class="result-title">Your Estimated Due Date</h3>
+                    <p class="result-value" id="due-date-result"></p>
+                </div>
+            </div>
+            
+            <div>
+                <img src="assets/pregnancy_consultation.jpg" alt="Pregnancy Checkup" class="calculator-image">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Logout functionality
+            
+            // Search functionality
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = document.getElementById('search-input').value.trim();
+                if (searchTerm) {
+                    // You can implement the search functionality here
+                    alert('Search functionality will be implemented for: ' + searchTerm);
+                    // Example of search implementation:
+                    // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+                }
+            });
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear session storage (consistent with new storage approach)
+                sessionStorage.removeItem('userData');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+            
+            // Pregnancy calculator functionality
+            document.getElementById('pregnancy-calculator-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const lmpDate = new Date(document.getElementById('lmp-date').value);
+                
+                // Calculate due date (LMP + 280 days or 40 weeks)
+                const dueDate = new Date(lmpDate);
+                dueDate.setDate(dueDate.getDate() + 280);
+                
+                // Format due date
+                const formattedDueDate = dueDate.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                // Display result
+                document.getElementById('due-date-result').textContent = formattedDueDate;
+                document.getElementById('result-section').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

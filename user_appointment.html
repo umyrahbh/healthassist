@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make an Appointment - HealthAssist</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+            margin-left: 2rem;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: #f8f9fa;
+        }
+        
+        .nav-menu a.active {
+            border-bottom: 2px solid #b71c1c;
+        }
+        
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background-color: #8e0000;
+        }
+        
+        /* Search bar styles */
+        .search-bar-container {
+            background-color: #f5f5f5;
+            padding: 10px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+        
+        .search-form {
+            position: relative;
+            display: inline-block;
+            max-width: 600px;
+            width: 90%;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #b71c1c;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            color: #b71c1c;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            text-align: center;
+        }
+        
+        .appointment-form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .btn-submit {
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-submit:hover {
+            background-color: #8e0000;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-right {
+                flex-direction: column;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .nav-menu {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .nav-actions {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .search-container {
+                margin-right: 0;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+            
+            .search-form {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="logo">
+                <img src="/logo.jpg" alt="HealthAssist Logo">
+                <span>HealthAssist</span>
+            </div>
+            <div class="nav-right">
+                <div class="nav-menu">
+                    <a href="/">Home</a>
+                    <a href="/user/specialist">Our Specialist</a>
+                    <a href="/user/appointment" class="active">Appointment</a>
+                    <a href="/user/pregnancy-calculator">Pregnancy Calculator</a>
+                    <a href="/user/view-appointment">View Appointment</a>
+                </div>
+                <div class="nav-actions">
+                    <button id="logout-btn" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-bar-container">
+            <form id="search-form" class="search-form">
+                <input type="text" id="search-input" class="search-input" placeholder="Search for checkup types...">
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <h1 class="page-title">Make an Appointment</h1>
+        
+        <div class="appointment-form-container">
+            <div id="success-message" class="success-message">
+                Your appointment has been scheduled successfully!
+            </div>
+            
+            <div id="error-message" class="error-message">
+                There was an error scheduling your appointment. Please try again.
+            </div>
+            
+            <h2 class="form-title">Book Your Appointment</h2>
+            
+            <form id="appointment-form">
+                <div class="form-group">
+                    <label class="form-label" for="appointment-type">Appointment Type</label>
+                    <select class="form-control" id="appointment-type" required>
+                        <option value="">Select Appointment Type</option>
+                        <!-- Checkup types will be loaded from the API -->
+                        <!-- Checkup types will be loaded from the API -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Preferred Doctor</label>
+                    <select class="form-control" id="doctor" required>
+                        <option value="">Select Doctor</option>
+                        <!-- Doctors will be loaded from the API -->
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="appointment-date">Preferred Date</label>
+                        <input type="date" class="form-control" id="appointment-date" required min="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="appointment-time">Preferred Time</label>
+                        <select class="form-control" id="appointment-time" required>
+                            <option value="">Select Time</option>
+                            <option value="09:00:00">9:00 AM</option>
+                            <option value="10:00:00">10:00 AM</option>
+                            <option value="11:00:00">11:00 AM</option>
+                            <option value="13:00:00">1:00 PM</option>
+                            <option value="14:00:00">2:00 PM</option>
+                            <option value="15:00:00">3:00 PM</option>
+                            <option value="16:00:00">4:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="special-requests">Special Requests/Notes</label>
+                    <textarea class="form-control" id="special-requests" rows="3" placeholder="Any special requests or information you'd like to provide"></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">Schedule Appointment</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+ 
+            // Load checkup types from API
+            // Load specialists/doctors from API
+            function loadDoctors() {
+                fetch("/api/specialists", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load doctors");
+                    }
+                    return response.json();
+                })
+                .then(specialists => {
+                    const selectElement = document.getElementById("doctor");
+                    
+                    // Clear existing options except the first one
+                    while (selectElement.options.length > 1) {
+                        selectElement.remove(1);
+                    }
+                    
+                    // Add specialists from API
+                    specialists.forEach(specialist => {
+                        if (specialist.is_active === 1) { // Only show active specialists
+                            const option = document.createElement("option");
+                            option.value = specialist.specialist_id;
+                            option.textContent = `${specialist.name} - ${specialist.specialization}`;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading doctors:", error);
+                    showError("Failed to load doctors. Please refresh the page.");
+                });
+            }
+
+            function loadCheckupTypes() {
+                fetch("/api/checkup-types", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load checkup types");
+                    }
+                    return response.json();
+                })
+                .then(checkupTypes => {
+                    const selectElement = document.getElementById("appointment-type");
+                    
+                    // Clear existing options except the first one
+                    while (selectElement.options.length > 1) {
+                        selectElement.remove(1);
+                    }
+                    
+                    // Add checkup types from API
+                    checkupTypes.forEach(checkup => {
+                        if (checkup.is_active) { // Only show active checkup types
+                            const option = document.createElement("option");
+                            option.value = checkup.checkup_id;
+                            option.textContent = `${checkup.name} - RM${checkup.price}`;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading checkup types:", error);
+                    showError("Failed to load appointment types. Please refresh the page.");
+                });
+            }
+            
+            // Parse URL query parameters to check if a specific checkup type was selected
+            function getQueryParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // Get checkup ID from URL if present
+            const selectedCheckupId = getQueryParam('checkup');
+            
+            // Call function to load checkup types
+            loadCheckupTypes();
+            
+            // After checkup types are loaded, select the one from URL if specified
+            if (selectedCheckupId) {
+                // Wait a short time to ensure the checkup types have loaded
+                setTimeout(() => {
+                    const checkupSelect = document.getElementById('appointment-type');
+                    // Find and select the option with the matching value
+                    for (let i = 0; i < checkupSelect.options.length; i++) {
+                        if (checkupSelect.options[i].value === selectedCheckupId) {
+                            checkupSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }, 500);
+            }
+            
+            // Call function to load doctors
+            loadDoctors();
+            // Logout functionality
+            
+            // Search functionality for checkup types
+            document.getElementById('search-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchTerm = document.getElementById('search-input').value.trim().toLowerCase();
+                if (searchTerm) {
+                    // Fetch all checkup types and filter by search term
+                    fetch("/api/checkup-types", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        credentials: "include"
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Failed to load checkup types");
+                        }
+                        return response.json();
+                    })
+                    .then(checkupTypes => {
+                        // Filter active checkup types that match the search term
+                        const filteredCheckups = checkupTypes.filter(checkup => 
+                            checkup.is_active && 
+                            (checkup.name.toLowerCase().includes(searchTerm) || 
+                             (checkup.description && checkup.description.toLowerCase().includes(searchTerm)))
+                        );
+                        
+                        // Display search results
+                        displaySearchResults(filteredCheckups, searchTerm);
+                    })
+                    .catch(error => {
+                        console.error("Error searching checkup types:", error);
+                        alert("Failed to search. Please try again.");
+                    });
+                }
+            });
+            
+            // Function to display search results
+            function displaySearchResults(results, searchTerm) {
+                // Create modal or overlay for search results
+                let searchResultsHTML = '';
+                
+                if (results.length === 0) {
+                    searchResultsHTML = `<p>No checkup types found matching "${searchTerm}"</p>`;
+                } else {
+                    searchResultsHTML = `
+                        <h3>Search Results for "${searchTerm}"</h3>
+                        <div class="search-results-list">
+                    `;
+                    
+                    results.forEach(checkup => {
+                        const imagePath = checkup.image_path ? '/' + checkup.image_path : 'assets/general-checkup.jpg';
+                        
+                        searchResultsHTML += `
+                            <div class="search-result-item">
+                                <img src="${imagePath}" alt="${checkup.name}" class="search-result-image">
+                                <div class="search-result-content">
+                                    <h4>${checkup.name}</h4>
+                                    <p>${checkup.description || 'No description available'}</p>
+                                    <p class="search-result-price">RM ${checkup.price}</p>
+                                    <button class="select-checkup-btn" data-id="${checkup.checkup_id}">Book this Checkup</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    searchResultsHTML += `</div>`;
+                }
+                
+                // Create modal with search results
+                const searchModal = document.createElement('div');
+                searchModal.className = 'search-modal';
+                searchModal.innerHTML = `
+                    <div class="search-modal-content">
+                        <span class="close-search-modal">&times;</span>
+                        <div class="search-results-container">
+                            ${searchResultsHTML}
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(searchModal);
+                
+                // Add styles for the search modal
+                const modalStyles = document.createElement('style');
+                modalStyles.textContent = `
+                    .search-modal {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 1100;
+                    }
+                    
+                    .search-modal-content {
+                        background-color: white;
+                        border-radius: 8px;
+                        max-width: 800px;
+                        width: 90%;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                        position: relative;
+                        padding: 20px;
+                    }
+                    
+                    .close-search-modal {
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        font-size: 24px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        color: #888;
+                    }
+                    
+                    .close-search-modal:hover {
+                        color: #333;
+                    }
+                    
+                    .search-results-container {
+                        padding: 10px 0;
+                    }
+                    
+                    .search-results-container h3 {
+                        margin-bottom: 20px;
+                        color: #333;
+                        text-align: center;
+                    }
+                    
+                    .search-result-item {
+                        display: flex;
+                        margin-bottom: 20px;
+                        padding-bottom: 20px;
+                        border-bottom: 1px solid #eee;
+                    }
+                    
+                    .search-result-image {
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover;
+                        border-radius: 6px;
+                        margin-right: 15px;
+                    }
+                    
+                    .search-result-content {
+                        flex: 1;
+                    }
+                    
+                    .search-result-content h4 {
+                        color: #b71c1c;
+                        margin: 0 0 10px 0;
+                    }
+                    
+                    .search-result-content p {
+                        color: #666;
+                        margin-bottom: 10px;
+                        font-size: 14px;
+                    }
+                    
+                    .search-result-price {
+                        font-weight: bold;
+                        color: #333;
+                    }
+                    
+                    .select-checkup-btn {
+                        background-color: #b71c1c;
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-weight: 500;
+                        margin-top: 10px;
+                    }
+                    
+                    .select-checkup-btn:hover {
+                        background-color: #8e0000;
+                    }
+                    
+                    @media (max-width: 600px) {
+                        .search-result-item {
+                            flex-direction: column;
+                        }
+                        
+                        .search-result-image {
+                            width: 100%;
+                            height: 150px;
+                            margin-right: 0;
+                            margin-bottom: 15px;
+                        }
+                    }
+                `;
+                
+                document.head.appendChild(modalStyles);
+                
+                // Handle close button click
+                document.querySelector('.close-search-modal').addEventListener('click', function() {
+                    document.body.removeChild(searchModal);
+                });
+                
+                // Handle clicking outside to close
+                searchModal.addEventListener('click', function(e) {
+                    if (e.target === searchModal) {
+                        document.body.removeChild(searchModal);
+                    }
+                });
+                
+                // Handle book button clicks
+                const selectButtons = document.querySelectorAll('.select-checkup-btn');
+                selectButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const checkupId = this.getAttribute('data-id');
+                        
+                        // Find and select the checkup type in the dropdown
+                        const checkupSelect = document.getElementById('appointment-type');
+                        for (let i = 0; i < checkupSelect.options.length; i++) {
+                            if (checkupSelect.options[i].value === checkupId) {
+                                checkupSelect.selectedIndex = i;
+                                // Trigger the change event to update availability
+                                const event = new Event('change');
+                                checkupSelect.dispatchEvent(event);
+                                break;
+                            }
+                        }
+                        
+                        // Close the modal
+                        document.body.removeChild(searchModal);
+                        
+                        // Scroll to the form
+                        document.querySelector('.appointment-form-container').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            }
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear session storage (consistent with new storage approach)
+                sessionStorage.removeItem('userData');
+                
+                // Redirect to logout endpoint
+                window.location.href = '/logout';
+            });
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointment-date').setAttribute('min', today);
+            
+            // Handle appointment form submission
+            // Check slot availability when date, time and checkup type are selected
+            function checkSlotAvailability() {
+                const appointmentDate = document.getElementById("appointment-date").value;
+                const appointmentTime = document.getElementById("appointment-time").value;
+                const checkupId = document.getElementById("appointment-type").value;
+                
+                if (!appointmentDate || !appointmentTime || !checkupId) {
+                    return; // Don't check if any values are missing
+                }
+                
+                const url = `/api/check-slot-availability?date=${appointmentDate}&time=${appointmentTime}&checkup_id=${checkupId}`;
+                
+                fetch(url, {
+                    method: "GET",
+                    credentials: "include"
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Failed to check availability");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.is_available) {
+                        showError(`This time slot is fully booked. Only ${data.slots_remaining} slots remain out of ${data.max_slots}.`);
+                        document.querySelector(".btn-submit").disabled = true;
+                    } else {
+                        // Clear any error and enable submit button
+                        document.getElementById("error-message").style.display = "none";
+                        document.querySelector(".btn-submit").disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error checking slot availability:", error);
+                });
+            }
+            
+            // Add event listeners to check availability when selections change
+            document.getElementById("appointment-date").addEventListener("change", checkSlotAvailability);
+            document.getElementById("appointment-time").addEventListener("change", checkSlotAvailability);
+            document.getElementById("appointment-type").addEventListener("change", checkSlotAvailability);
+            document.getElementById('appointment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const appointmentType = document.getElementById('appointment-type').value;
+                const doctor = document.getElementById('doctor').value;
+                const appointmentDate = document.getElementById('appointment-date').value;
+                const appointmentTime = document.getElementById('appointment-time').value;
+                const specialRequests = document.getElementById('special-requests').value;
+                
+                // Prepare the appointment data
+                const appointmentData = {
+                    appointment_date: appointmentDate,
+                    appointment_time: appointmentTime,
+                    checkup_id: appointmentType,
+                    // In a real app, you could include doctor_id and special requests
+                };
+                
+                // Create a checkout session that will redirect to Stripe
+                fetch("/api/create-checkout-session", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(appointmentData),
+                    credentials: 'include' // Include cookies for authentication
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => {
+                            throw new Error(err.error || "Failed to create checkout session");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Checkout session created:", data);
+                    if (data.url) {
+                        // Redirect to Stripe checkout
+                        window.location.href = data.url;
+                    } else {
+                        showError("Failed to create checkout session. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error creating checkout session:", error);
+                    showError(error.message || "Failed to process payment. Please try again.");
+                });
+            });
+            
+            function showSuccess() {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showError(message) {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                // Hide error message after 5 seconds
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
