@@ -1,0 +1,108 @@
+/* Health Facts Styles */
+.health-facts {
+    background-color: #f9f9f9;
+    padding: 80px 0;
+}
+
+.health-facts-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.health-facts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.health-fact-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.health-fact-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.health-fact-header {
+    background-color: #b71c1c;
+    color: white;
+    padding: 15px 20px;
+}
+
+.health-fact-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.health-fact-category {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.health-fact-content {
+    padding: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.featured-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ffeb3b;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+@media (max-width: 992px) {
+    .health-facts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .health-facts-grid {
+        grid-template-columns: 1fr;
+    }
+}

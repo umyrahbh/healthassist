@@ -1,0 +1,190 @@
+6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/:392 
+            
+            
+           GET https://6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/assets/patient1.jpg 404 (Not Found)
+6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/:402 
+            
+            
+           GET https://6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/assets/patient2.jpg 404 (Not Found)
+(index):562 Uncaught RangeError: Maximum call stack size exceeded
+    at loadServices ((index):562:38)
+    at showLoggedInUI ((index):534:13)
+    at checkLoginStatus ((index):502:17)
+    at (index):659:36
+    at Array.forEach (<anonymous>)
+    at displayServices ((index):642:28)
+    at loadServices ((index):605:17)
+    at showLoggedInUI ((index):534:13)
+    at checkLoginStatus ((index):502:17)
+    at (index):659:36
+loadServices @ (index):562
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+checkLoginStatus @ (index):502
+(anonymous) @ (index):659
+displayServices @ (index):642
+loadServices @ (index):605
+showLoggedInUI @ (index):534
+6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/:412 
+            
+            
+           GET https://6017f9bb-39cc-4a02-ad96-9d9adb83a9a6-00-vrrdjjryck98.riker.replit.dev/assets/patient3.jpg 404 (Not Found)

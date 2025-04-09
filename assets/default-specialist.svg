@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="400" height="400" fill="#f0f0f0"/>
+  
+  <!-- Doctor silhouette -->
+  <circle cx="200" cy="150" r="80" fill="#cccccc"/>
+  <rect x="160" y="230" width="80" height="120" fill="#cccccc"/>
+  
+  <!-- Face elements -->
+  <circle cx="180" cy="140" r="8" fill="#666666"/>
+  <circle cx="220" cy="140" r="8" fill="#666666"/>
+  <path d="M180 180 Q 200 200 220 180" stroke="#666666" stroke-width="4" fill="transparent"/>
+  
+  <!-- Medical symbol -->
+  <rect x="175" y="250" width="50" height="10" fill="#b71c1c"/>
+  <rect x="195" y="230" width="10" height="50" fill="#b71c1c"/>
+</svg>
