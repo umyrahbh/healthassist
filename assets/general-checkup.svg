@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="180" viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="180" fill="#F5F5F5"/>
+  <rect x="50" y="55" width="200" height="70" rx="10" fill="#E0E0E0"/>
+  <path d="M150 35C142.82 35 137 40.82 137 48C137 55.18 142.82 61 150 61C157.18 61 163 55.18 163 48C163 40.82 157.18 35 150 35ZM150 57C145.04 57 141 52.96 141 48C141 43.04 145.04 39 150 39C154.96 39 159 43.04 159 48C159 52.96 154.96 57 150 57Z" fill="#B71C1C"/>
+  <path d="M152 45H148V42H152V45ZM152 54H148V48H152V54Z" fill="#B71C1C"/>
+  <text x="150" y="95" fill="#666666" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">Health Checkup</text>
+  <text x="150" y="115" fill="#999999" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">No Image Available</text>
+  <text x="150" y="145" fill="#B71C1C" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle">HealthAssist</text>
+</svg>

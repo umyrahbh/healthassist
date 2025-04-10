@@ -381,8 +381,8 @@
                         
                         // Use default image if none is provided
                         const imagePath = checkup.image_path 
-                            ? '/' + checkup.image_path 
-                            : 'https://via.placeholder.com/300x180?text=Health+Service';
+                            ? checkup.image_path 
+                            : 'assets/general-checkup.svg';
                         
                         // Format price to show RM currency
                         const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);

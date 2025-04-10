@@ -384,8 +384,8 @@
                         // Default image if none provided
                         let imagePath = 'assets/default-specialist.svg';
                         if (specialist.image_path) {
-                            // Use the full path for uploaded images
-                            imagePath = `/${specialist.image_path}`;
+                            // Use image path directly as returned from server
+                            imagePath = specialist.image_path;
                         }
                         
                         specialistCard.innerHTML = `
@@ -469,7 +469,7 @@
                     `;
                     
                     results.forEach(checkup => {
-                        const imagePath = checkup.image_path ? '/' + checkup.image_path : 'assets/general-checkup.jpg';
+                        const imagePath = checkup.image_path ? checkup.image_path : 'assets/general-checkup.svg';
                         
                         searchResultsHTML += `
                             <div class="search-result-item">

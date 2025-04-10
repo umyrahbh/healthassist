@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${checkupType.description ? checkupType.description.substring(0, 50) + (checkupType.description.length > 50 ? '...' : '') : '-'}</td>
                 <td>
                     ${checkupType.image_path ? 
-                    `<img src="/${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" />` : 
+                    `<img src="${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" />` : 
                     '<span class="text-muted">No image</span>'}
                 </td>
                 <td>RM ${parseFloat(checkupType.price).toFixed(2)}</td>
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const previewContainer = document.getElementById('image-preview-container');
                 const preview = document.getElementById('image-preview');
                 if (checkupType.image_path) {
-                    preview.src = '/' + checkupType.image_path;
+                    preview.src = checkupType.image_path;
                     previewContainer.style.display = 'block';
                 } else {
                     previewContainer.style.display = 'none';
@@ -478,7 +478,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Only append image if a file is selected
         if (imageFile) {
+            console.log('Appending image file to form data:', imageFile.name, imageFile.type, imageFile.size);
             formData.append('image', imageFile);
+        } else {
+            console.log('No image file selected');
         }
         
         // Add or update checkup type
@@ -494,6 +497,13 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {Object} checkupData - The checkup type data to add
      */
     function addCheckupType(formData) {
+        console.log('Sending form data to server for creating checkup type');
+        
+        // Debug - list all entries in the FormData (for debugging)
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + (pair[0] === 'image' ? 'File object' : pair[1]));
+        }
+        
         fetch('/api/checkup-types', {
             method: 'POST',
             // Don't set Content-Type header when sending FormData
@@ -539,6 +549,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCheckupType(checkupId, formData) {
         // Add the checkup ID to the form data
         formData.append('checkup_id', checkupId);
+        
+        console.log('Sending form data to server for updating checkup type:', checkupId);
+        
+        // Debug - list all entries in the FormData (for debugging)
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + (pair[0] === 'image' ? 'File object' : pair[1]));
+        }
         
         fetch(`/api/checkup-types/${checkupId}`, {
             method: 'PUT',

@@ -1,0 +1,39 @@
+# Environment variables
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# SQLite database files
+*.sqlite3
+*.db
+
+# Log files
+*.log
+
+# Local email backups
+emails/
+
+# Uploaded files
+uploads/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Docker related
+.docker/
+docker-compose.override.yml
+
+# OS specific files
+.DS_Store
+Thumbs.db

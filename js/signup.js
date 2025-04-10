@@ -29,22 +29,34 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('signup-password').value;
         const confirmPassword = document.getElementById('signup-confirm-password').value;
         
-        // Basic validation
+        // Enhanced validation
         let isValid = true;
         
+        // Username validation (3-12 chars, alphanumeric and underscore only)
         if (!username) {
             showError('username-error', 'Username is required');
             isValid = false;
-        } else if (username.length < 3) {
-            showError('username-error', 'Username must be at least 3 characters');
+        } else if (username.length < 3 || username.length > 12) {
+            showError('username-error', 'Username must be between 3 and 12 characters');
+            isValid = false;
+        } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            showError('username-error', 'Username can only contain letters, numbers, and underscores');
             isValid = false;
         }
         
+        // Full name validation (2-50 chars, letters, spaces, and hyphens only)
         if (!fullName) {
             showError('fullname-error', 'Full name is required');
             isValid = false;
+        } else if (fullName.length < 2 || fullName.length > 50) {
+            showError('fullname-error', 'Name must be between 2 and 50 characters');
+            isValid = false;
+        } else if (!/^[a-zA-Z\s\-]+$/.test(fullName)) {
+            showError('fullname-error', 'Name can only contain letters, spaces, and hyphens');
+            isValid = false;
         }
         
+        // Email validation
         if (!email) {
             showError('email-error', 'Email is required');
             isValid = false;
@@ -53,32 +65,40 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         }
         
+        // Phone validation (8-15 digits)
         if (!phone) {
             showError('phone-error', 'Phone number is required');
             isValid = false;
         } else if (!isValidPhone(phone)) {
-            showError('phone-error', 'Please enter a valid phone number');
+            showError('phone-error', 'Phone number must contain 8-15 digits');
             isValid = false;
         }
         
+        // Gender validation
         if (!gender) {
             showError('gender-error', 'Please select your gender');
             isValid = false;
         }
         
+        // Birthday validation
         if (!birthday) {
             showError('birthday-error', 'Date of birth is required');
             isValid = false;
         }
         
+        // Password validation (8+ chars with uppercase, lowercase, number, special char)
         if (!password) {
             showError('password-error', 'Password is required');
             isValid = false;
-        } else if (password.length < 6) {
-            showError('password-error', 'Password must be at least 6 characters');
+        } else if (password.length < 8) {
+            showError('password-error', 'Password must be at least 8 characters');
+            isValid = false;
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])/.test(password)) {
+            showError('password-error', 'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character');
             isValid = false;
         }
         
+        // Confirm password validation
         if (password !== confirmPassword) {
             showError('confirm-password-error', 'Passwords do not match');
             isValid = false;
@@ -189,12 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     /**
-     * Validate phone number format (basic validation)
+     * Validate phone number format (8-15 digits)
      * @param {string} phone - The phone number to validate
      * @returns {boolean} - True if valid, false otherwise
      */
     function isValidPhone(phone) {
-        // Basic validation - at least 10 digits
-        return phone.replace(/\D/g, '').length >= 10;
+        // Validate phone number - between 8 and 15 digits
+        const digitsOnly = phone.replace(/\D/g, '');
+        return digitsOnly.length >= 8 && digitsOnly.length <= 15;
     }
 });

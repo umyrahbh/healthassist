@@ -1,0 +1,14 @@
+# Database configuration
+PGUSER=healthassist
+PGPASSWORD=healthassist_password
+PGDATABASE=healthassist
+PGHOST=db
+PGPORT=5432
+DATABASE_URL=postgresql://healthassist:healthassist_password@db:5432/healthassist
+
+# Email configuration (Gmail)
+GMAIL_EMAIL=your-email@gmail.com
+GMAIL_APP_PASSWORD=your-app-password
+
+# Stripe configuration
+STRIPE_SECRET_KEY=your-stripe-secret-key

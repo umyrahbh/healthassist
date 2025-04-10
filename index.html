@@ -596,8 +596,8 @@
             activeCheckups.forEach(checkup => {
                 // Use default image if none is provided
                 const imagePath = checkup.image_path 
-                    ? '/' + checkup.image_path 
-                    : 'assets/general-checkup.jpg';
+                    ? checkup.image_path 
+                    : 'assets/general-checkup.svg';
 
                 // Format price to show RM currency
                 const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);
@@ -765,7 +765,7 @@
                 `;
 
                 results.forEach(checkup => {
-                    const imagePath = checkup.image_path ? '/' + checkup.image_path : 'assets/general-checkup.jpg';
+                    const imagePath = checkup.image_path ? checkup.image_path : 'assets/general-checkup.svg';
                     const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);
 
                     searchResultsHTML += `

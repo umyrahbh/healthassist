@@ -289,10 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${specialist.specialization}</td>
                 <td>${specialist.image_path ? 
                     `<div class="specialist-img-container">
-                        <img src="${specialist.image_path.startsWith('/') ? specialist.image_path : `/${specialist.image_path}`}" 
+                        <img src="${specialist.image_path}" 
                              alt="${specialist.name}" 
                              class="specialist-thumbnail"
-                             onerror="this.src='/assets/default-specialist.svg'">
+                             onerror="this.src='assets/default-specialist.svg'">
                      </div>` : 
                     '<span class="no-image">No image</span>'}
                 </td>
@@ -443,9 +443,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Set image path and show preview if image exists
                 if (specialist.image_path) {
                     document.getElementById('specialist-image-path').value = specialist.image_path;
-                    // Add leading slash to image path if it doesn't already have one
-                    specialistImagePreview.src = specialist.image_path.startsWith('/') ? 
-                        specialist.image_path : `/${specialist.image_path}`;
+                    // Display the image path as-is from the server
+                    specialistImagePreview.src = specialist.image_path;
                     specialistImagePreviewContainer.style.display = 'block';
                 } else {
                     document.getElementById('specialist-image-path').value = '';
