@@ -102,7 +102,6 @@ def login():
                      "Database connection error. Please try again."}), 500
 
             # Check if user exists and password matches
-            # Inside your login route where you check the password
             if user:
                 password_matches = False
                 try:
@@ -393,14 +392,19 @@ def uploaded_file(filename):
 
 @app.route('/<path:path>')
 def serve_file(path):
+    # Always allow static asset types regardless of their path
+    if '/assets/' in path or path.startswith('assets/') or \
+       '/css/' in path or path.startswith('css/') or \
+       '/js/' in path or path.startswith('js/') or \
+       '/uploads/' in path or path.startswith('uploads/'):
+        # This is a static asset, serve it directly
+        return send_from_directory('.', path)
+    
     # Don't serve protected routes through the general handler
-    # But allow static assets even if they're in admin/ or user/ paths
-    if (path.startswith('admin/') or path.startswith('user/')) and not (
-            path.startswith('assets/') or 
-            path.startswith('css/') or 
-            path.startswith('js/') or 
-            path.startswith('uploads/')):
+    if path.startswith('admin/') or path.startswith('user/'):
         return redirect('/login')
+        
+    # Standard path handling
     return send_from_directory('.', path)
 
 

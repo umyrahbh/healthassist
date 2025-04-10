@@ -382,14 +382,14 @@
                         specialistCard.className = 'specialist-card';
                         
                         // Default image if none provided
-                        let imagePath = 'assets/default-specialist.svg';
+                        let imagePath = '/assets/default-specialist.svg';
                         if (specialist.image_path) {
                             // Use image path directly as returned from server
-                            imagePath = specialist.image_path;
+                            imagePath = '/' + specialist.image_path;
                         }
                         
                         specialistCard.innerHTML = `
-                            <img class="specialist-image" src="${imagePath}" alt="${specialist.name}" onerror="this.src='assets/default-specialist.svg'">
+                            <img class="specialist-image" src="${imagePath}" alt="${specialist.name}" onerror="this.src='/assets/default-specialist.svg'">
                             <div class="specialist-info">
                                 <h3 class="specialist-name">${specialist.name}</h3>
                                 <p class="specialist-title">${specialist.title}</p>
@@ -469,7 +469,7 @@
                     `;
                     
                     results.forEach(checkup => {
-                        const imagePath = checkup.image_path ? checkup.image_path : 'assets/general-checkup.svg';
+                        const imagePath = checkup.image_path ? '/' + checkup.image_path : '/assets/general-checkup.svg';
                         
                         searchResultsHTML += `
                             <div class="search-result-item">
