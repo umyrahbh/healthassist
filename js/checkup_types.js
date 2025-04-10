@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${checkupType.description ? checkupType.description.substring(0, 50) + (checkupType.description.length > 50 ? '...' : '') : '-'}</td>
                 <td>
                     ${checkupType.image_path ? 
-                    `<img src="${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" />` : 
+                    `<img src="/${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" onerror="this.src='/assets/default_checkup.svg'; this.onerror=null;" />` : 
                     '<span class="text-muted">No image</span>'}
                 </td>
                 <td>RM ${parseFloat(checkupType.price).toFixed(2)}</td>
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const previewContainer = document.getElementById('image-preview-container');
                 const preview = document.getElementById('image-preview');
                 if (checkupType.image_path) {
-                    preview.src = checkupType.image_path;
+                    preview.src = '/' + checkupType.image_path;
                     previewContainer.style.display = 'block';
                 } else {
                     previewContainer.style.display = 'none';

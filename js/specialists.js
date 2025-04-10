@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>${specialist.specialization}</td>
                 <td>${specialist.image_path ? 
                     `<div class="specialist-img-container">
-                        <img src="${specialist.image_path}" 
+                        <img src="/${specialist.image_path}" 
                              alt="${specialist.name}" 
                              class="specialist-thumbnail"
                              onerror="this.src='assets/default-specialist.svg'">
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (specialist.image_path) {
                     document.getElementById('specialist-image-path').value = specialist.image_path;
                     // Display the image path as-is from the server
-                    specialistImagePreview.src = specialist.image_path;
+                    specialistImagePreview.src = '/' + specialist.image_path;
                     specialistImagePreviewContainer.style.display = 'block';
                 } else {
                     document.getElementById('specialist-image-path').value = '';

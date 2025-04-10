@@ -381,7 +381,14 @@ def payment_page():
 @app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
     """Serve uploaded files."""
-    return send_from_directory('uploads', filename)
+    # Extract the directory part from the filename
+    parts = filename.split('/')
+    if len(parts) > 1:
+        directory = os.path.join('uploads', os.path.dirname(filename))
+        basename = os.path.basename(filename)
+        return send_from_directory(directory, basename)
+    else:
+        return send_from_directory('uploads', filename)
 
 
 @app.route('/<path:path>')
