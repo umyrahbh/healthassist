@@ -394,7 +394,12 @@ def uploaded_file(filename):
 @app.route('/<path:path>')
 def serve_file(path):
     # Don't serve protected routes through the general handler
-    if path.startswith('admin/') or path.startswith('user/'):
+    # But allow static assets even if they're in admin/ or user/ paths
+    if (path.startswith('admin/') or path.startswith('user/')) and not (
+            path.startswith('assets/') or 
+            path.startswith('css/') or 
+            path.startswith('js/') or 
+            path.startswith('uploads/')):
         return redirect('/login')
     return send_from_directory('.', path)
 
