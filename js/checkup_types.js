@@ -7,17 +7,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load header
     loadHeader('admin');
-    
+
     // Variables for pagination
     const itemsPerPage = 10;
     let currentPage = 1;
     let totalPages = 1;
     let checkupTypes = [];
     let filteredCheckupTypes = [];
-    
+
     // Variables for deleting
     let checkupTypeToDelete = null;
-    
+
     // DOM Elements
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
@@ -35,10 +35,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveCheckupBtn = document.getElementById('save-checkup-btn');
     const deleteModal = document.getElementById('delete-modal');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
-    
+    const checkupImageInput = document.getElementById('checkup-image');
+    const checkupImagePreview = document.getElementById('image-preview');
+    const checkupImagePreviewContainer = document.getElementById('image-preview-container');
+    const checkupImagePath = document.getElementById('checkup-image-path');
+    const removeImageBtn = document.getElementById('remove-image-btn');
+
+    /**
+     * Clear all error messages in a form
+     * @param {HTMLFormElement} form - The form element
+     */
+    function clearFormErrors(form) {
+        const errorElements = form.querySelectorAll('.error-feedback');
+        errorElements.forEach(function(el) {
+            el.textContent = '';
+            el.style.display = 'none';
+        });
+    }
+
+    /**
+     * Show error message for a specific field
+     * @param {string} fieldId - The ID of the field
+     * @param {string} message - The error message to display
+     */
+    function showFieldError(fieldId, message) {
+        const errorEl = document.getElementById(fieldId + '-error');
+        if (errorEl) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+    }
+
+    /**
+     * Clear error message for a specific field
+     * @param {string} fieldId - The ID of the field
+     */
+    function clearFieldError(fieldId) {
+        const errorEl = document.getElementById(fieldId + '-error');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+        }
+    }
+
     // Initialize the page
     init();
-    
+
     /**
      * Initialize the page
      */
@@ -49,51 +91,71 @@ document.addEventListener('DOMContentLoaded', function() {
         searchInput.addEventListener('keyup', function(e) {
             if (e.key === 'Enter') filterCheckupTypes();
         });
-        
+
         statusFilter.addEventListener('change', filterCheckupTypes);
         resetFiltersBtn.addEventListener('click', resetFilters);
         saveCheckupBtn.addEventListener('click', handleCheckupFormSubmit);
         confirmDeleteBtn.addEventListener('click', confirmDeleteCheckupType);
-        
-        // Setup image preview
-        const imageInput = document.getElementById('checkup-image');
-        if (imageInput) {
-            imageInput.addEventListener('change', function() {
-                const previewContainer = document.getElementById('image-preview-container');
-                const preview = document.getElementById('image-preview');
-                
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        previewContainer.style.display = 'block';
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                } else {
-                    previewContainer.style.display = 'none';
-                }
-            });
-        }
-        
-        // Close modal buttons
-        document.querySelectorAll('.close-modal, .modal-dialog .btn-secondary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const modal = this.closest('.modal');
-                modal.style.display = 'none';
-                modal.classList.remove('show');
-                
-                // Remove backdrop
-                var backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-            });
-        });
-        
+
+        // Image upload preview
+        checkupImageInput.addEventListener('change', handleImagePreview);
+        removeImageBtn.addEventListener('click', removeImagePreview);
+
         // Load checkup types
         loadCheckupTypes();
     }
-    
+
+    /**
+     * Handle image file selection and preview
+     */
+    function handleImagePreview() {
+        const file = checkupImageInput.files[0];
+        if (file) {
+            // Check if file is an image
+            if (!file.type.match('image.*')) {
+                showFieldError('checkup-image', 'Please select an image file (JPG, PNG, etc.)');
+                checkupImageInput.value = '';
+                return;
+            }
+
+            // Clear any existing error
+            clearFieldError('checkup-image');
+
+            // Read and display the image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                checkupImagePreview.src = e.target.result;
+                checkupImagePreviewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    /**
+     * Remove the current image preview
+     */
+    function removeImagePreview() {
+        checkupImageInput.value = '';
+        checkupImagePath.value = '';
+        checkupImagePreviewContainer.style.display = 'none';
+        checkupImagePreview.src = '#';
+    }
+
+    // Close modal buttons
+    document.querySelectorAll('.close-modal, .modal-dialog .btn-secondary').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+
+            // Remove backdrop
+            var backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+        });
+    });
+
     /**
      * Load checkup types data
      */
@@ -106,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
             </tr>
         `;
-        
+
         // Fetch checkup types from API
         fetch('/api/checkup-types')
             .then(response => {
@@ -132,70 +194,70 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Failed to load checkup types. ' + error.message, 'danger');
             });
     }
-    
+
     /**
      * Filter checkup types based on search and dropdown filters
      */
     function filterCheckupTypes() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         const statusValue = statusFilter.value;
-        
+
         filteredCheckupTypes = checkupTypes.filter(checkupType => {
             // Filter by search term
             const nameMatch = checkupType.name.toLowerCase().includes(searchTerm);
             const descMatch = checkupType.description ? checkupType.description.toLowerCase().includes(searchTerm) : false;
             const searchMatch = nameMatch || descMatch;
-            
+
             // Filter by status
             let statusMatch = true;
             if (statusValue !== 'all') {
                 statusMatch = (statusValue === 'active' && checkupType.is_active === 1) || 
                               (statusValue === 'inactive' && checkupType.is_active === 0);
             }
-            
+
             return searchMatch && statusMatch;
         });
-        
+
         // Reset to first page when filtering
         currentPage = 1;
         renderCheckupTypesTable();
     }
-    
+
     /**
      * Reset all filters
      */
     function resetFilters() {
         searchInput.value = '';
         statusFilter.value = 'all';
-        
+
         filteredCheckupTypes = [...checkupTypes];
         currentPage = 1;
         renderCheckupTypesTable();
     }
-    
+
     /**
      * Render the checkup types table with pagination
      */
     function renderCheckupTypesTable() {
         // Calculate pagination
         totalPages = Math.ceil(filteredCheckupTypes.length / itemsPerPage);
-        
+
         // Ensure current page is within bounds
         if (currentPage < 1) currentPage = 1;
         if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
-        
+
         // Calculate start and end indices
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = Math.min(startIndex + itemsPerPage, filteredCheckupTypes.length);
-        
+
         // Update pagination display
         paginationStart.textContent = filteredCheckupTypes.length > 0 ? startIndex + 1 : 0;
         paginationEnd.textContent = endIndex;
         paginationTotal.textContent = filteredCheckupTypes.length;
-        
+
         // Clear existing content
         checkupTypesBody.innerHTML = '';
-        
+
         // Check if no records found
         if (filteredCheckupTypes.length === 0) {
             checkupTypesBody.innerHTML = `
@@ -208,21 +270,21 @@ document.addEventListener('DOMContentLoaded', function() {
             renderPagination();
             return;
         }
-        
+
         // Render table rows
         const checkupTypesToDisplay = filteredCheckupTypes.slice(startIndex, endIndex);
-        
+
         checkupTypesToDisplay.forEach(checkupType => {
             const row = document.createElement('tr');
-            
+
             row.innerHTML = `
                 <td>${checkupType.checkup_id}</td>
                 <td>${checkupType.name}</td>
                 <td>${checkupType.description ? checkupType.description.substring(0, 50) + (checkupType.description.length > 50 ? '...' : '') : '-'}</td>
                 <td>
                     ${checkupType.image_path ? 
-                    `<img src="/${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" onerror="this.src='/assets/default_checkup.svg'; this.onerror=null;" />` : 
-                    '<span class="text-muted">No image</span>'}
+    `<img src="${checkupType.image_path.startsWith('/') ? '' : '/'}${checkupType.image_path}" alt="${checkupType.name}" style="max-width: 50px; max-height: 50px;" onerror="this.src='/assets/default_checkup.svg'; this.onerror=null;" />` : 
+    '<span class="text-muted">No image</span>'}
                 </td>
                 <td>RM ${parseFloat(checkupType.price).toFixed(2)}</td>
                 <td>${checkupType.duration_minutes}</td>
@@ -243,31 +305,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </td>
             `;
-            
+
             // Add event listeners for action buttons
             row.querySelector('.btn-edit').addEventListener('click', function() {
                 openEditCheckupModal(checkupType.checkup_id);
             });
-            
+
             row.querySelector('.btn-delete').addEventListener('click', function() {
                 openDeleteModal(checkupType.checkup_id);
             });
-            
+
             checkupTypesBody.appendChild(row);
         });
-        
+
         // Render pagination
         renderPagination();
     }
-    
+
     /**
      * Render pagination controls
      */
     function renderPagination() {
         paginationEl.innerHTML = '';
-        
+
         if (totalPages <= 1) return;
-        
+
         // Previous button
         const prevButton = document.createElement('button');
         prevButton.classList.add('pagination-btn');
@@ -280,15 +342,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         paginationEl.appendChild(prevButton);
-        
+
         // Page numbers
         let startPage = Math.max(1, currentPage - 2);
         let endPage = Math.min(totalPages, startPage + 4);
-        
+
         if (endPage - startPage < 4) {
             startPage = Math.max(1, endPage - 4);
         }
-        
+
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('button');
             pageButton.classList.add('pagination-btn');
@@ -300,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             paginationEl.appendChild(pageButton);
         }
-        
+
         // Next button
         const nextButton = document.createElement('button');
         nextButton.classList.add('pagination-btn');
@@ -314,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         paginationEl.appendChild(nextButton);
     }
-    
+
     /**
      * Open modal for adding a new checkup type
      */
@@ -322,22 +384,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset form
         checkupTypeForm.reset();
         document.getElementById('checkup-id').value = '';
-        
+
         // Clear all error messages
         clearFormErrors(checkupTypeForm);
-        
+
         // Set modal title
         checkupModalTitle.textContent = 'Add New Checkup Type';
-        
+
         // Set default values
         document.getElementById('checkup-active').checked = true;
         document.getElementById('checkup-duration').value = '30';
         document.getElementById('checkup-max-slots').value = '10';
-        
+
         // Show modal
         checkupTypeModal.style.display = 'block';
         checkupTypeModal.classList.add('show');
-        
+
         // Add backdrop if needed
         if (!document.querySelector('.modal-backdrop')) {
             var backdrop = document.createElement('div');
@@ -345,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(backdrop);
         }
     }
-    
+
     /**
      * Open modal for editing a checkup type
      * @param {number} checkupId - The ID of the checkup type to edit
@@ -353,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function openEditCheckupModal(checkupId) {
         // Clear all error messages
         clearFormErrors(checkupTypeForm);
-        
+
         // Get checkup type data
         fetch(`/api/checkup-types/${checkupId}`)
             .then(response => {
@@ -370,31 +432,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('checkup-price').value = checkupType.price;
                 document.getElementById('checkup-duration').value = checkupType.duration_minutes;
                 document.getElementById('checkup-max-slots').value = checkupType.max_slots_per_time;
-                
+
                 // Set status radio button
                 if (checkupType.is_active === 1) {
                     document.getElementById('checkup-active').checked = true;
                 } else {
                     document.getElementById('checkup-inactive').checked = true;
                 }
-                
+
                 // Show image preview if available
-                const previewContainer = document.getElementById('image-preview-container');
-                const preview = document.getElementById('image-preview');
                 if (checkupType.image_path) {
-                    preview.src = '/' + checkupType.image_path;
-                    previewContainer.style.display = 'block';
+                    // Set image path in hidden field
+                    document.getElementById('checkup-image-path').value = checkupType.image_path;
+
+                    // Update preview image with timestamp to prevent caching
+                    const timestamp = new Date().getTime();
+                    const imageSrc = checkupType.image_path.startsWith('/') ? checkupType.image_path : '/' + checkupType.image_path;
+                    checkupImagePreview.src = `${imageSrc}?t=${timestamp}`;
+                    checkupImagePreviewContainer.style.display = 'block';
+
+                    // Add error handler for image loading
+                    checkupImagePreview.onerror = function() {
+                        console.error('Failed to load image:', imageSrc);
+                        this.src = '/assets/default_checkup.svg';
+                    };
                 } else {
-                    previewContainer.style.display = 'none';
+                    // Clear image path and hide preview
+                    document.getElementById('checkup-image-path').value = '';
+                    checkupImagePreviewContainer.style.display = 'none';
                 }
-                
+
                 // Set modal title
                 checkupModalTitle.textContent = 'Edit Checkup Type';
-                
+
                 // Show modal
                 checkupTypeModal.style.display = 'block';
                 checkupTypeModal.classList.add('show');
-                
+
                 // Add backdrop if needed
                 if (!document.querySelector('.modal-backdrop')) {
                     var backdrop = document.createElement('div');
@@ -407,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('Failed to load checkup type details. ' + error.message, 'danger');
             });
     }
-    
+
     /**
      * Open delete confirmation modal
      * @param {number} checkupId - The ID of the checkup type to delete
@@ -416,7 +490,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkupTypeToDelete = checkupId;
         deleteModal.style.display = 'block';
         deleteModal.classList.add('show');
-        
+
         // Add backdrop if needed
         if (!document.querySelector('.modal-backdrop')) {
             var backdrop = document.createElement('div');
@@ -424,14 +498,14 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(backdrop);
         }
     }
-    
+
     /**
      * Handle checkup type form submission (add/edit)
      */
     function handleCheckupFormSubmit() {
         // Clear previous error messages
         clearFormErrors(checkupTypeForm);
-        
+
         // Get form values
         const checkupId = document.getElementById('checkup-id').value;
         const name = document.getElementById('checkup-name').value.trim();
@@ -441,32 +515,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxSlots = document.getElementById('checkup-max-slots').value;
         const isActive = document.querySelector('input[name="checkup-status"]:checked').value;
         const imageFile = document.getElementById('checkup-image').files[0];
-        
+
         // Validate form
         let isValid = true;
-        
+
         if (!name) {
             showFieldError('checkup-name', 'Name is required');
             isValid = false;
         }
-        
+
         if (!price || parseFloat(price) < 0) {
             showFieldError('checkup-price', 'Please enter a valid price');
             isValid = false;
         }
-        
+
         if (!duration || parseInt(duration) < 5) {
             showFieldError('checkup-duration', 'Duration must be at least 5 minutes');
             isValid = false;
         }
-        
+
         if (!maxSlots || parseInt(maxSlots) < 1) {
             showFieldError('checkup-max-slots', 'Maximum slots must be at least 1');
             isValid = false;
         }
-        
+
         if (!isValid) return;
-        
+
         // Use FormData to handle file uploads
         const formData = new FormData();
         formData.append('name', name);
@@ -475,15 +549,21 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('duration_minutes', parseInt(duration));
         formData.append('max_slots_per_time', parseInt(maxSlots));
         formData.append('is_active', parseInt(isActive));
-        
+
         // Only append image if a file is selected
         if (imageFile) {
             console.log('Appending image file to form data:', imageFile.name, imageFile.type, imageFile.size);
             formData.append('image', imageFile);
         } else {
             console.log('No image file selected');
+            // If there's an existing image path, preserve it
+            const imagePath = document.getElementById('checkup-image-path').value;
+            if (imagePath) {
+                console.log('Using existing image path:', imagePath);
+                formData.append('image_path', imagePath);
+            }
         }
-        
+
         // Add or update checkup type
         if (checkupId) {
             updateCheckupType(checkupId, formData);
@@ -491,19 +571,19 @@ document.addEventListener('DOMContentLoaded', function() {
             addCheckupType(formData);
         }
     }
-    
+
     /**
      * Add a new checkup type
      * @param {Object} checkupData - The checkup type data to add
      */
     function addCheckupType(formData) {
         console.log('Sending form data to server for creating checkup type');
-        
+
         // Debug - list all entries in the FormData (for debugging)
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + (pair[0] === 'image' ? 'File object' : pair[1]));
         }
-        
+
         fetch('/api/checkup-types', {
             method: 'POST',
             // Don't set Content-Type header when sending FormData
@@ -522,16 +602,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide modal
             checkupTypeModal.style.display = 'none';
             checkupTypeModal.classList.remove('show');
-            
+
             // Remove backdrop
             var backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
             }
-            
+
             // Show success notification
             showNotification('Checkup type added successfully', 'success');
-            
+
             // Reload checkup types
             loadCheckupTypes();
         })
@@ -540,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification(error.message, 'danger');
         });
     }
-    
+
     /**
      * Update an existing checkup type
      * @param {number} checkupId - The ID of the checkup type to update
@@ -549,14 +629,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCheckupType(checkupId, formData) {
         // Add the checkup ID to the form data
         formData.append('checkup_id', checkupId);
-        
+
         console.log('Sending form data to server for updating checkup type:', checkupId);
-        
+
         // Debug - list all entries in the FormData (for debugging)
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + (pair[0] === 'image' ? 'File object' : pair[1]));
         }
-        
+
         fetch(`/api/checkup-types/${checkupId}`, {
             method: 'PUT',
             // Don't set Content-Type header when sending FormData
@@ -575,16 +655,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide modal
             checkupTypeModal.style.display = 'none';
             checkupTypeModal.classList.remove('show');
-            
+
             // Remove backdrop
             var backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
             }
-            
+
             // Show success notification
             showNotification('Checkup type updated successfully', 'success');
-            
+
             // Reload checkup types
             loadCheckupTypes();
         })
@@ -593,13 +673,13 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification(error.message, 'danger');
         });
     }
-    
+
     /**
      * Delete a checkup type
      */
     function confirmDeleteCheckupType() {
         if (!checkupTypeToDelete) return;
-        
+
         fetch(`/api/checkup-types/${checkupTypeToDelete}`, {
             method: 'DELETE'
         })
@@ -615,30 +695,30 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hide modal
             deleteModal.style.display = 'none';
             deleteModal.classList.remove('show');
-            
+
             // Remove backdrop
             var backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
             }
-            
+
             // Show success notification
             showNotification('Checkup type deleted successfully', 'success');
-            
+
             // Reload checkup types
             loadCheckupTypes();
-            
+
             // Reset checkupTypeToDelete
             checkupTypeToDelete = null;
         })
         .catch(error => {
             console.error('Error deleting checkup type:', error);
             showNotification(error.message, 'danger');
-            
+
             // Hide modal
             deleteModal.style.display = 'none';
             deleteModal.classList.remove('show');
-            
+
             // Remove backdrop
             var backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {

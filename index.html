@@ -596,7 +596,7 @@
             activeCheckups.forEach(checkup => {
                 // Use default image if none is provided
                 const imagePath = checkup.image_path 
-                    ? checkup.image_path 
+                    ? (checkup.image_path.startsWith('/') ? '' : '/') + checkup.image_path
                     : 'assets/general-checkup.svg';
 
                 // Format price to show RM currency
@@ -605,7 +605,7 @@
                 const serviceCard = document.createElement('div');
                 serviceCard.className = 'service-card';
                 serviceCard.innerHTML = `
-                    <img src="${imagePath}" alt="${checkup.name}" class="service-img">
+                    <img src="${imagePath}" alt="${checkup.name}" class="service-img" onerror="this.src='assets/general-checkup.svg';">
                     <div class="service-content">
                         <h3 class="service-title">${checkup.name}</h3>
                         <p class="service-text">${checkup.description || 'No description available.'}</p>
@@ -765,12 +765,14 @@
                 `;
 
                 results.forEach(checkup => {
-                    const imagePath = checkup.image_path ? checkup.image_path : 'assets/general-checkup.svg';
+                    const imagePath = checkup.image_path 
+                        ? (checkup.image_path.startsWith('/') ? '' : '/') + checkup.image_path 
+                        : 'assets/general-checkup.svg';
                     const formattedPrice = 'RM ' + parseFloat(checkup.price).toFixed(2);
 
                     searchResultsHTML += `
                         <div class="search-result-item">
-                            <img src="${imagePath}" alt="${checkup.name}" class="search-result-image">
+                            <img src="${imagePath}" alt="${checkup.name}" class="search-result-image" onerror="this.src='assets/general-checkup.svg';">
                             <div class="search-result-content">
                                 <h4>${checkup.name}</h4>
                                 <p>${checkup.description || 'No description available'}</p>

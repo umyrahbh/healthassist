@@ -14,7 +14,7 @@ from email_service import send_appointment_confirmation
 
 # Configure Stripe
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
-DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', '35.240.207.57:5000')
+DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', 'localhost:5000')
 
 app = Flask(__name__)
 app.secret_key = os.environ.get(
@@ -103,25 +103,20 @@ def login():
 
             # Check if user exists and password matches
             if user:
+                # Try password hash check first (for newer users with hashed passwords)
                 password_matches = False
                 try:
-                    if user.password.startswith('$2'):  # Check if it's a bcrypt hash
-                        app.logger.info("Using bcrypt verification")
-                        password_matches = check_password_hash(user.password, password)
-                    elif user.password.startswith('scrypt:'):  # Add this check for scrypt
-                        app.logger.info("Using scrypt verification")
-                        # You'll need to use the appropriate scrypt verification function
-                        # This depends on what library you used to generate the hash
-                        from werkzeug.security import check_password_hash
-                        password_matches = check_password_hash(user.password, password)
+                    if user.password.startswith(
+                            '$2'):  # Check if it's a bcrypt hash
+                        password_matches = check_password_hash(
+                            user.password, password)
                     else:
-                        app.logger.info("Using plaintext comparison")
+                        # For older users with plaintext passwords during transition
                         password_matches = (user.password == password)
-                    app.logger.info(f"Password match: {password_matches}")
                 except Exception as e:
-                    app.logger.error(f"Password verification error: {str(e)}")
+                    print(f"Password verification error: {str(e)}")
+                    # Fallback to direct comparison in case of hash verification error
                     password_matches = (user.password == password)
-                    app.logger.info(f"Fallback password match: {password_matches}")
 
                 if password_matches:
                     login_user(user)
@@ -167,7 +162,7 @@ def signup():
     # Import validation functions
     from validation import (validate_username, validate_name, validate_email, 
                          validate_phone, validate_password)
-    
+
     session = Session()
     data = request.json
 
@@ -192,27 +187,27 @@ def signup():
         is_valid, error_msg = validate_username(data.get('username'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "username"}), 400
-            
+
         # Validate full name
         is_valid, error_msg = validate_name(data.get('user_name'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "user_name"}), 400
-            
+
         # Validate email
         is_valid, error_msg = validate_email(data.get('email'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "email"}), 400
-            
+
         # Validate phone
         is_valid, error_msg = validate_phone(data.get('phone_number'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "phone_number"}), 400
-            
+
         # Validate password
         is_valid, error_msg = validate_password(data.get('password'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "password"}), 400
-            
+
         # Validate password confirmation if provided
         if 'confirm_password' in data and data['password'] != data['confirm_password']:
             return jsonify({"error": "Passwords do not match", "field": "confirm_password"}), 400
@@ -256,7 +251,7 @@ def signup():
 
         session.add(new_user)
         session.commit()
-        
+
         # Log successful registration
         print(f"User registered successfully: {new_user.username} (ID: {new_user.user_id})")
 
@@ -399,11 +394,11 @@ def serve_file(path):
        '/uploads/' in path or path.startswith('uploads/'):
         # This is a static asset, serve it directly
         return send_from_directory('.', path)
-    
+
     # Don't serve protected routes through the general handler
     if path.startswith('admin/') or path.startswith('user/'):
         return redirect('/login')
-        
+
     # Standard path handling
     return send_from_directory('.', path)
 
@@ -459,7 +454,7 @@ def create_user():
     # Import validation functions
     from validation import (validate_username, validate_name, validate_email, 
                          validate_password)
-                         
+
     session = Session()
     data = request.json
 
@@ -475,22 +470,22 @@ def create_user():
                     "error": f"{field.replace('_', ' ').title()} is required",
                     "field": field
                 }), 400
-        
+
         # Validate username
         is_valid, error_msg = validate_username(data.get('username'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "username"}), 400
-            
+
         # Validate full name
         is_valid, error_msg = validate_name(data.get('user_name'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "user_name"}), 400
-            
+
         # Validate email
         is_valid, error_msg = validate_email(data.get('email'))
         if not is_valid:
             return jsonify({"error": error_msg, "field": "email"}), 400
-            
+
         # Validate password
         is_valid, error_msg = validate_password(data.get('password'))
         if not is_valid:
@@ -514,7 +509,7 @@ def create_user():
                 phone_number = int(data.get('phone_number'))
             except ValueError:
                 return jsonify({"error": "Invalid phone number format", "field": "phone_number"}), 400
-        
+
         # Process birthday if provided, otherwise default
         birthday = date.today()  # Default to today
         if 'birthday' in data and data.get('birthday'):
@@ -536,7 +531,7 @@ def create_user():
 
         session.add(new_user)
         session.commit()
-        
+
         # Log successful user creation
         print(f"User created successfully by admin: {new_user.username} (ID: {new_user.user_id})")
 
@@ -563,7 +558,7 @@ def update_user(user_id):
     # Import validation functions
     from validation import (validate_username, validate_name, validate_email, 
                          validate_phone, validate_password)
-                         
+
     session = Session()
     data = request.json
 
@@ -576,57 +571,57 @@ def update_user(user_id):
             return jsonify({"error": "User not found"}), 404
 
         # Validate fields that are being updated
-        
+
         # Validate username if being changed
         if 'username' in data and data['username']:
             is_valid, error_msg = validate_username(data['username'])
             if not is_valid:
                 return jsonify({"error": error_msg, "field": "username"}), 400
-                
+
             # Check if username is being changed and if it's already in use
             if data['username'] != user.username:
                 existing_username = session.query(User).filter(
                     User.username == data['username']).first()
                 if existing_username:
                     return jsonify({"error": "Username already in use", "field": "username"}), 400
-        
+
         # Validate name if being changed
         if 'user_name' in data and data['user_name']:
             is_valid, error_msg = validate_name(data['user_name'])
             if not is_valid:
                 return jsonify({"error": error_msg, "field": "user_name"}), 400
-                
+
         # Validate email if being changed
         if 'email' in data and data['email']:
             is_valid, error_msg = validate_email(data['email'])
             if not is_valid:
                 return jsonify({"error": error_msg, "field": "email"}), 400
-                
+
             # Check if email is being changed and if it's already in use
             if data['email'] != user.email:
                 existing_email = session.query(User).filter(
                     User.email == data['email']).first()
                 if existing_email:
                     return jsonify({"error": "Email already in use", "field": "email"}), 400
-                    
+
         # Validate phone if being changed
         if 'phone_number' in data and data['phone_number']:
             is_valid, error_msg = validate_phone(data['phone_number'])
             if not is_valid:
                 return jsonify({"error": error_msg, "field": "phone_number"}), 400
-            
+
             # Parse phone number
             try:
                 phone_number = int(data['phone_number'])
             except ValueError:
                 return jsonify({"error": "Invalid phone number format", "field": "phone_number"}), 400
-                
+
         # Validate password if being changed
         if 'password' in data and data['password']:
             is_valid, error_msg = validate_password(data['password'])
             if not is_valid:
                 return jsonify({"error": error_msg, "field": "password"}), 400
-                
+
             # Validate password confirmation if provided
             if 'confirm_password' in data and data['password'] != data['confirm_password']:
                 return jsonify({"error": "Passwords do not match", "field": "confirm_password"}), 400
@@ -653,7 +648,7 @@ def update_user(user_id):
                 return jsonify({"error": "Invalid date format for birthday", "field": "birthday"}), 400
 
         session.commit()
-        
+
         # Log successful update
         print(f"User updated successfully: {user.username} (ID: {user.user_id})")
 
@@ -890,8 +885,7 @@ def create_appointment():
             new_appointment.status,
             'price_paid':
             float(new_appointment.price_paid),
-            'message':
-            'Appointment created successfully'
+            'message': 'Appointment created successfully'
         }), 201
 
     except Exception as e:
@@ -1207,8 +1201,8 @@ def create_checkout_session():
                 ],
                 mode='payment',
                 success_url=
-                f'http://{DOMAIN}/payment-success?session_id={{CHECKOUT_SESSION_ID}}',
-                cancel_url=f'http://{DOMAIN}/user/appointment',
+                f'https://{DOMAIN}/payment-success?session_id={{CHECKOUT_SESSION_ID}}',
+                cancel_url=f'https://{DOMAIN}/user/appointment',
                 metadata={
                     'user_id': current_user.user_id,
                     'appointment_date': appointment_date,
@@ -1308,7 +1302,7 @@ def payment_success():
                 print(f"User authenticated: {current_user.is_authenticated}")
                 print(f"User ID: {current_user.user_id}")
                 print(f"Attempting to send email to: {user.email}")
-                
+
                 # Send confirmation email
                 email_sent = send_appointment_confirmation(
                     user_email=user.email,
@@ -1369,6 +1363,8 @@ def get_checkup_types():
             checkup.duration_minutes,
             'max_slots_per_time':
             checkup.max_slots_per_time,
+            'image_path':
+            checkup.image_path,
             'is_active':
             checkup.is_active,
             'created_at':
@@ -1392,22 +1388,15 @@ def get_checkup_type(checkup_id):
             return jsonify({"error": "Checkup type not found"}), 404
 
         return jsonify({
-            'checkup_id':
-            checkup.checkup_id,
-            'name':
-            checkup.name,
-            'description':
-            checkup.description,
-            'price':
-            float(checkup.price),
-            'duration_minutes':
-            checkup.duration_minutes,
-            'max_slots_per_time':
-            checkup.max_slots_per_time,
-            'is_active':
-            checkup.is_active,
-            'created_at':
-            checkup.created_at.isoformat() if checkup.created_at else None
+            'checkup_id': checkup.checkup_id,
+            'name': checkup.name,
+            'description': checkup.description,
+            'price': float(checkup.price),
+            'duration_minutes': checkup.duration_minutes,
+            'max_slots_per_time': checkup.max_slots_per_time,
+            'is_active': checkup.is_active,
+            'image_path': checkup.image_path,
+            'created_at': checkup.created_at.isoformat() if checkup.created_at else None
         })
     except Exception as e:
         print(f"Error getting checkup type: {str(e)}")
@@ -1456,14 +1445,14 @@ def create_checkup_type():
                 filename = secure_filename(file.filename)
                 ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
                 unique_filename = f"{uuid.uuid4().hex}.{ext}"
-                
+
                 # Define the directory and ensure it exists
                 upload_dir = 'uploads/checkup_types'
                 os.makedirs(upload_dir, exist_ok=True)
-                
+
                 # Create full file path (using forward slashes for web)
                 file_path = f"{upload_dir}/{unique_filename}"
-                
+
                 # Save the file
                 print(f"Saving file to: {file_path}")
                 file.save(file_path)
@@ -1471,6 +1460,9 @@ def create_checkup_type():
                 print(f"Image path saved: {image_path}")
             else:
                 print("File exists in request but has no filename")
+        elif 'image_path' in data:
+            image_path = data.get('image_path')
+            print(f"Using existing image path: {image_path}")
 
         # Create new checkup type
         new_checkup = CheckupType(
@@ -1548,14 +1540,14 @@ def update_checkup_type(checkup_id):
                 filename = secure_filename(file.filename)
                 ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
                 unique_filename = f"{uuid.uuid4().hex}.{ext}"
-                
+
                 # Define the directory and ensure it exists
                 upload_dir = 'uploads/checkup_types'
                 os.makedirs(upload_dir, exist_ok=True)
-                
+
                 # Create full file path (using forward slashes for web)
                 file_path = f"{upload_dir}/{unique_filename}"
-                
+
                 # Save the file
                 print(f"Update - Saving file to: {file_path}")
                 file.save(file_path)
@@ -1563,6 +1555,9 @@ def update_checkup_type(checkup_id):
                 print(f"Update - Image path saved: {file_path}")
             else:
                 print("Update - File exists in request but has no filename")
+        elif 'image_path' in data:
+            print(f"Update - Using existing image path: {data['image_path']}")
+            checkup.image_path = data['image_path']
 
         # Update checkup fields
         if 'name' in data:
@@ -1731,14 +1726,14 @@ def create_specialist():
                 filename = secure_filename(file.filename)
                 ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
                 unique_filename = f"{uuid.uuid4().hex}.{ext}"
-                
+
                 # Define the directory and ensure it exists
                 upload_dir = 'uploads/specialists'
                 os.makedirs(upload_dir, exist_ok=True)
-                
+
                 # Create full file path (using forward slashes for web)
                 file_path = f"{upload_dir}/{unique_filename}"
-                
+
                 # Save the file
                 file.save(file_path)
                 image_path = file_path
@@ -1808,14 +1803,14 @@ def update_specialist(specialist_id):
                 filename = secure_filename(file.filename)
                 ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
                 unique_filename = f"{uuid.uuid4().hex}.{ext}"
-                
+
                 # Define the directory and ensure it exists
                 upload_dir = 'uploads/specialists'
                 os.makedirs(upload_dir, exist_ok=True)
-                
+
                 # Create full file path (using forward slashes for web)
                 file_path = f"{upload_dir}/{unique_filename}"
-                
+
                 # Save the file
                 file.save(file_path)
                 specialist.image_path = file_path
