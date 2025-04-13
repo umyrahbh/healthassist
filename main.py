@@ -103,20 +103,25 @@ def login():
 
             # Check if user exists and password matches
             if user:
-                # Try password hash check first (for newer users with hashed passwords)
                 password_matches = False
                 try:
-                    if user.password.startswith(
-                            '$2'):  # Check if it's a bcrypt hash
-                        password_matches = check_password_hash(
-                            user.password, password)
+                    if user.password.startswith('$2'):  # Check if it's a bcrypt hash
+                        app.logger.info("Using bcrypt verification")
+                        password_matches = check_password_hash(user.password, password)
+                    elif user.password.startswith('scrypt:'):  # Add this check for scrypt
+                        app.logger.info("Using scrypt verification")
+                        # You'll need to use the appropriate scrypt verification function
+                        # This depends on what library you used to generate the hash
+                        from werkzeug.security import check_password_hash
+                        password_matches = check_password_hash(user.password, password)
                     else:
-                        # For older users with plaintext passwords during transition
+                        app.logger.info("Using plaintext comparison")
                         password_matches = (user.password == password)
+                    app.logger.info(f"Password match: {password_matches}")
                 except Exception as e:
-                    print(f"Password verification error: {str(e)}")
-                    # Fallback to direct comparison in case of hash verification error
+                    app.logger.error(f"Password verification error: {str(e)}")
                     password_matches = (user.password == password)
+                    app.logger.info(f"Fallback password match: {password_matches}")
 
                 if password_matches:
                     login_user(user)
