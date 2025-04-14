@@ -14,7 +14,7 @@ from email_service import send_appointment_confirmation
 
 # Configure Stripe
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
-DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', 'localhost:5000')
+DOMAIN = os.environ.get('REPLIT_DEV_DOMAIN', '34.143.166.2:5000')
 
 app = Flask(__name__)
 app.secret_key = os.environ.get(
@@ -1206,8 +1206,8 @@ def create_checkout_session():
                 ],
                 mode='payment',
                 success_url=
-                f'https://{DOMAIN}/payment-success?session_id={{CHECKOUT_SESSION_ID}}',
-                cancel_url=f'https://{DOMAIN}/user/appointment',
+                f'http://{DOMAIN}/payment-success?session_id={{CHECKOUT_SESSION_ID}}',
+                cancel_url=f'http://{DOMAIN}/user/appointment',
                 metadata={
                     'user_id': current_user.user_id,
                     'appointment_date': appointment_date,
