@@ -550,18 +550,17 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('max_slots_per_time', parseInt(maxSlots));
         formData.append('is_active', parseInt(isActive));
 
-        // Only append image if a file is selected
+        // Get existing image path
+        const existingImagePath = document.getElementById('checkup-image-path').value;
+        
+        // Check if there's a new image to upload
         if (imageFile) {
-            console.log('Appending image file to form data:', imageFile.name, imageFile.type, imageFile.size);
+            console.log('Appending new image file to form data');
             formData.append('image', imageFile);
-        } else {
-            console.log('No image file selected');
-            // If there's an existing image path, preserve it
-            const imagePath = document.getElementById('checkup-image-path').value;
-            if (imagePath) {
-                console.log('Using existing image path:', imagePath);
-                formData.append('image_path', imagePath);
-            }
+        } else if (existingImagePath) {
+            // Keep existing image path
+            console.log('Using existing image path:', existingImagePath);
+            formData.append('image_path', existingImagePath);
         }
 
         // Add or update checkup type
@@ -686,7 +685,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => {
             if (!response.ok) {
                 return response.json().then(data => {
-                    throw new Error(data.error || 'Failed to delete checkup type');
+                    // Create a custom error with all the properties from the response
+                    const error = new Error(data.error || 'Failed to delete checkup type');
+                    // Add additional properties from the response
+                    if (data.reason) error.reason = data.reason;
+                    if (data.count) error.count = data.count;
+                    throw error;
                 });
             }
             return response.json();
@@ -713,8 +717,23 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error deleting checkup type:', error);
-            showNotification(error.message, 'danger');
-
+            
+            // Parse the response to get the detailed error message
+            let errorMessage = 'Failed to delete checkup type';
+            
+            // If the error contains JSON data with more details
+            if (error.message && error.message.includes('Cannot delete')) {
+                errorMessage = error.message;
+            }
+            
+            // Create a more prominent error alert for the constraint violation
+            if (error.reason === 'in_use') {
+                errorMessage = `${error.message} There are currently ${error.count} appointment(s) using this checkup type.`;
+            }
+            
+            // Show error notification that stays longer (10 seconds for important errors)
+            showNotification(errorMessage, 'danger', 10000);
+            
             // Hide modal
             deleteModal.style.display = 'none';
             deleteModal.classList.remove('show');

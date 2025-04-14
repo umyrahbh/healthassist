@@ -1614,12 +1614,13 @@ def delete_checkup_type(checkup_id):
             return jsonify({"error": "Checkup type not found"}), 404
 
         # Check if this checkup type is used in appointments
-        appointments = session.query(Appointment).filter(
-            Appointment.checkup_id == checkup_id).first()
-        if appointments:
+        appointment_count = session.query(Appointment).filter(
+            Appointment.checkup_id == checkup_id).count()
+        if appointment_count > 0:
             return jsonify({
-                "error":
-                "Cannot delete checkup type that is being used in appointments"
+                "error": f"Cannot delete '{checkup.name}' because it is being used in {appointment_count} appointment(s). Please remove all associated appointments first.",
+                "reason": "in_use",
+                "count": appointment_count
             }), 400
 
         session.delete(checkup)
