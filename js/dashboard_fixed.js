@@ -90,16 +90,29 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(function(data) {
                 var users = data;
                 var totalUsers = users.length;
-                var doctors = users.filter(function(user) { 
-                    return user.user_type === 'Doctor';
-                }).length;
                 var patients = users.filter(function(user) { 
                     return user.user_type === 'Normal';
                 }).length;
 
                 document.getElementById('total-users-value').textContent = totalUsers;
-                document.getElementById('doctors-count-value').textContent = doctors;
                 document.getElementById('patients-count-value').textContent = patients;
+                
+                // Fetch specialists to count doctors
+                return fetch('/api/specialists');
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch specialists data');
+                }
+                return response.json();
+            })
+            .then(function(specialists) {
+                // Count active specialists
+                var doctors = specialists.filter(function(specialist) {
+                    return specialist.is_active === 1;
+                }).length;
+                
+                document.getElementById('doctors-count-value').textContent = doctors;
 
                 // After we have users data, fetch appointments
                 return fetch('/api/appointments');
